@@ -12,6 +12,12 @@ defaults:
   run:
     working-directory: ./model-serving-mlops/terraform
 
+permissions:
+  id-token: write
+  contents: read
+  issues: write
+  pull-requests: write
+
 # Code reference can be found at https://github.com/hashicorp/setup-terraform
 jobs:
   staging:
