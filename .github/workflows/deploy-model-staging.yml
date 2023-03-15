@@ -38,10 +38,11 @@ jobs:
         run: ./.github/workflows/scripts/generate-aad-token.sh ${{ secrets.stagingAzureSpTenantId }} ${{ secrets.stagingAzureSpApplicationId }} ${{ secrets.stagingAzureSpClientSecret }}
 
       - name: Install local package
-        run: pip install ./model_serving_mlops mlflow
+        run: pip install .
 
       - name: Deploy model
         env:
           MLFLOW_TRACKING_URI: databricks
         run: |
-          python ./model_serving_mlops/deployment/model_deployment/deploy.py "${{ github.event.inputs.modelUri }}" "staging"
+          pip install mlflow
+          python model_serving_mlops/deployment/model_deployment/deploy.py "${{ github.event.inputs.modelUri }}" "staging"
