@@ -17,12 +17,13 @@ defaults:
     working-directory: ./model-serving-mlops/terraform
 
 jobs:
+
   staging:
     concurrency: model-serving-mlops-staging-terraform-job
     runs-on: ubuntu-20.04
     env:
       DATABRICKS_HOST: https://adb-4301376284584187.7.azuredatabricks.net
-
+      
     steps:
       - uses: actions/checkout@v3
       - name: Generate AAD Token

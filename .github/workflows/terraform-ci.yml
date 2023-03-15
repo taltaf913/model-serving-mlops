@@ -16,13 +16,16 @@ defaults:
 
 # Code reference can be found at https://github.com/hashicorp/setup-terraform
 jobs:
+
   staging:
     concurrency: model-serving-mlops-staging-terraform-job
     runs-on: ubuntu-20.04
     env:
       DATABRICKS_HOST: https://adb-4301376284584187.7.azuredatabricks.net
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Check out code
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Generate AAD Token
@@ -85,6 +88,7 @@ jobs:
               repo: context.repo.repo,
               body: output
             })
+
   prod:
     concurrency: model-serving-mlops-prod-terraform-job
     runs-on: ubuntu-20.04
