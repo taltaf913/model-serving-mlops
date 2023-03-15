@@ -14,7 +14,7 @@
 This page explains how to productionize the current project, setting up CI/CD and
 ML resource deployment, and deploying ML training and inference jobs.
 
-After following this guide, data scientists can follow the [ML Pull Request](ml-pull-request.md) and 
+After following this guide, data scientists can follow the [ML Pull Request](ml-pull-request.md) and
 [ML Config](../model-serving-mlops/terraform/README.md) guides to make changes to ML code or deployed jobs.
 
 ## Create a hosted Git repo

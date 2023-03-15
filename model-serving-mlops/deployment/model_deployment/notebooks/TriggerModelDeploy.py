@@ -37,12 +37,8 @@ model_uri = dbutils.jobs.taskValues.get("Train", "model_uri", debugValue="")
 assert env != "None", "env notebook parameter must be specified"
 assert model_uri != "", "model_uri notebook parameter must be specified"
 
-github_repo = dbutils.secrets.get(
-    f"{env}-model-serving-mlops-cd-credentials", "github_repo"
-)
-token = dbutils.secrets.get(
-    f"{env}-model-serving-mlops-cd-credentials", "token"
-)
+github_repo = dbutils.secrets.get(f"{env}-model-serving-mlops-cd-credentials", "github_repo")
+token = dbutils.secrets.get(f"{env}-model-serving-mlops-cd-credentials", "token")
 
 github_server = "https://api.github.com"
 
@@ -68,4 +64,3 @@ print(
     f"Successfully triggered model CD deployment workflow for {model_uri}. See your CD provider to check the "
     f"status of model deployment"
 )
-

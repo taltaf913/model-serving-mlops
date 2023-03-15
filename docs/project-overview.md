@@ -26,7 +26,7 @@ contained in the following files:
 ```
 model-serving-mlops         <- Root directory. Both monorepo and polyrepo are supported.
 │
-├── model-serving-mlops       <- Contains python code, notebooks and ML resources related to one ML project. 
+├── model-serving-mlops       <- Contains python code, notebooks and ML resources related to one ML project.
 │   │
 │   ├── training                <- Folder for model development via MLflow recipes.
 │   │   │
@@ -64,7 +64,7 @@ model-serving-mlops         <- Root directory. Both monorepo and polyrepo are su
 │
 ├── .github                     <- Configuration folder for CI/CD using GitHub Actions. The CI/CD workflows run the notebooks
 │                                  under `notebooks` to test and deploy model training code
-│ 
+│
 ├── requirements.txt            <- Specifies Python dependencies for ML code (for example: model training, batch inference).
 ```
 

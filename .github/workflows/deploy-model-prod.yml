@@ -19,7 +19,7 @@ on:
 env:
   DATABRICKS_HOST: https://adb-3011150083119087.7.azuredatabricks.net
   NODE_TYPE_ID: Standard_D3_v2
-  
+
 jobs:
   prod:
     runs-on: ubuntu-20.04

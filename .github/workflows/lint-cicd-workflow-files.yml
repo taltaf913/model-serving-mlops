@@ -4,12 +4,16 @@ on:
     paths:
       - '.github/workflows/**'
   workflow_dispatch:
-  
+
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        id: setup_python
+      - uses: pre-commit/action@v3.0.0
+        id: pre-commit
       - name: Download actionlint
         id: get_actionlint
         run: bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)

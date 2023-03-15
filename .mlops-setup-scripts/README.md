@@ -64,7 +64,7 @@ To use the scripts, you must:
        [App registrations UI](https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps)
        under the Azure Active Directory resource within the Azure portal. Then, verify that you can click "New registration" to create
        a new AAD application, but don't actually create one. If unable to click "New registration", ask your Azure admin to grant you [Application.ReadWrite.All](https://learn.microsoft.com/en-us/graph/permissions-reference#application-resource-permissions) permissions
-  
+
 
 ### Configure Azure auth
 * Log into Azure via `az login --tenant "$AZURE_TENANT_ID"`
@@ -73,7 +73,7 @@ To use the scripts, you must:
 
 ### Configure Databricks auth
 * Configure a Databricks CLI profile for your staging workspace by running
-  ``databricks configure --token --profile "model-serving-mlops-staging" --host https://adb-4301376284584187.7.azuredatabricks.net``, 
+  ``databricks configure --token --profile "model-serving-mlops-staging" --host https://adb-4301376284584187.7.azuredatabricks.net``,
   which will prompt you for a REST API token
 * Create a [Databricks REST API token](https://learn.microsoft.com/azure/databricks/dev-tools/api/latest/authentication#generate-a-personal-access-token)
   in the staging workspace ([link](https://adb-4301376284584187.7.azuredatabricks.net#setting/account))
@@ -93,7 +93,7 @@ during CI/CD).
    Databricks -> GitHub Actions to trigger a model deployment deployment workflow when
    automated model retraining completes, i.e. perform step (2) in
    [this diagram](https://github.com/databricks/mlops-stack/blob/main/Pipeline.md#model-training-pipeline).
-   
+
 If using GitHub as your hosted Git provider, you can generate a Git token through the [token UI](https://github.com/settings/tokens/new);
 be sure to generate a token with "Repo" scope. If you have SSO enabled with your Git provider, be sure to authorize your token.
 
@@ -113,7 +113,7 @@ python .mlops-setup-scripts/cicd/bootstrap.py \
   --var git_token=<your-git-token>
 ```
 
-Take care to run the Terraform bootstrap script before the CI/CD bootstrap script. 
+Take care to run the Terraform bootstrap script before the CI/CD bootstrap script.
 
 The first Terraform bootstrap script will:
 
@@ -122,14 +122,14 @@ The first Terraform bootstrap script will:
    current ML project
 2. Create another Azure Blob Storage container for storing the state of CI/CD principals provisioned for the current
    ML project
-   
+
 The second CI/CD bootstrap script will:
 
 3. Write credentials for accessing the container in (1) to a file
 4. Create Databricks service principals configured for CI/CD, write their credentials to a file, and store their
    state in the Azure Blob Storage container created in (2).
 
-   
+
 
 
 Each `bootstrap.py` script will print out the path to a JSON file containing generated secret values
@@ -144,7 +144,7 @@ Store each of the generated secrets in the output JSON files as
 where the JSON key
 (e.g. `prodAzureSpApplicationId`)
 is the expected name of the secret in GitHub Actions and the JSON value
-(without the surrounding `"` double-quotes) is the value of the secret. 
+(without the surrounding `"` double-quotes) is the value of the secret.
 
 Note: The provided GitHub Actions workflows under `.github/workflows` assume that you will configure
 [repo secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository),

@@ -28,9 +28,7 @@ def get_deployed_model_stage_for_env(env):
 
 def _get_ml_config_value(env, key):
     # Reading ml config from terraform output file for the respective key and env(staging/prod).
-    conf_file_path = os.path.join(
-        os.pardir, "model-serving-mlops", "terraform", "output", f"{env}.json"
-    )
+    conf_file_path = os.path.join(os.pardir, "model-serving-mlops", "terraform", "output", f"{env}.json")
     try:
         with open(conf_file_path, "r") as handle:
             data = json.loads(handle.read())
@@ -44,8 +42,7 @@ def _get_ml_config_value(env, key):
         return data[key]["value"]
     except KeyError as e:
         raise RuntimeError(
-            f"Unable to load key '{key}' for env '{env}'. Ensure that key '{key}' is defined "
-            f"in f{conf_file_path}"
+            f"Unable to load key '{key}' for env '{env}'. Ensure that key '{key}' is defined " f"in f{conf_file_path}"
         ) from e
 
 
