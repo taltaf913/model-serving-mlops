@@ -10,7 +10,7 @@ resource "databricks_job" "model_training_job" {
     }
   }
 
-  # Reuse same cluster across all tasks
+  # Reuse same job cluster across all tasks
   job_cluster {
     job_cluster_key = "model-training-deployment-cluster"
     new_cluster {
