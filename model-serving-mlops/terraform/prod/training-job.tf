@@ -10,16 +10,9 @@ resource "databricks_job" "model_training_job" {
     }
   }
 
-  task {
-    task_key = "Train"
-
-    notebook_task {
-      notebook_path = "model-serving-mlops/training/notebooks/Train"
-      base_parameters = {
-        env = local.env
-      }
-    }
-
+  # Reuse same cluster across all tasks
+  job_cluster {
+    job_cluster_key = "model-training-deployment-cluster"
     new_cluster {
       num_workers   = 2
       spark_version = "12.2.x-cpu-ml-scala2.12"
@@ -30,6 +23,20 @@ resource "databricks_job" "model_training_job" {
       data_security_mode = "SINGLE_USER"
       custom_tags        = { "clusterSource" = "mlops-stack/0.0" }
     }
+  }  
+
+  task {
+    task_key = "Train"
+
+    notebook_task {
+      notebook_path = "model-serving-mlops/training/notebooks/Train"
+      base_parameters = {
+        env = local.env
+      }
+    }
+
+    job_cluster_key = "model-training-deployment-cluster"
+
   }
 
   task {
@@ -52,12 +59,8 @@ resource "databricks_job" "model_training_job" {
       }
     }
 
-    new_cluster {
-      num_workers   = 2
-      spark_version = "12.2.x-cpu-ml-scala2.12"
-      node_type_id  = "Standard_D3_v2"
-      custom_tags   = { "clusterSource" = "mlops-stack/0.0" }
-    }
+    job_cluster_key = "model-training-deployment-cluster"
+
   }
 
   task {
@@ -73,12 +76,8 @@ resource "databricks_job" "model_training_job" {
       }
     }
 
-    new_cluster {
-      num_workers   = 2
-      spark_version = "12.2.x-cpu-ml-scala2.12"
-      node_type_id  = "Standard_D3_v2"
-      custom_tags   = { "clusterSource" = "mlops-stack/0.0" }
-    }
+    job_cluster_key = "model-training-deployment-cluster"
+
   }
 
   git_source {
