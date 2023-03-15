@@ -8,6 +8,8 @@ on:
     paths:
       - 'model-serving-mlops/terraform/**'
 
+permissions: write-all
+
 defaults:
   run:
     working-directory: ./model-serving-mlops/terraform
@@ -20,7 +22,6 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       DATABRICKS_HOST: https://adb-4301376284584187.7.azuredatabricks.net
-    permissions: write-all
 
     steps:
       - name: Check out code
@@ -87,12 +88,12 @@ jobs:
               repo: context.repo.repo,
               body: output
             })
+
   prod:
     concurrency: model-serving-mlops-prod-terraform-job
     runs-on: ubuntu-20.04
     env:
       DATABRICKS_HOST: https://adb-3011150083119087.7.azuredatabricks.net
-    permissions: write-all
 
     steps:
       - uses: actions/checkout@v3
