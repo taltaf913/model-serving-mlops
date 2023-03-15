@@ -8,6 +8,8 @@ on:
     paths:
       - 'model-serving-mlops/terraform/**'
 
+permissions: write-all
+
 defaults:
   run:
     working-directory: ./model-serving-mlops/terraform

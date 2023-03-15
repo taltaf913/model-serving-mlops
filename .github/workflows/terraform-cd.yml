@@ -10,6 +10,8 @@ on:
       - 'model-serving-mlops/terraform/**'
   workflow_dispatch:
 
+permissions: write-all
+
 defaults:
   run:
     working-directory: ./model-serving-mlops/terraform
