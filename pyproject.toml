@@ -1,0 +1,13 @@
+[project]
+name = "model-serving-mlops"
+version = "0.0.1"
+
+[tool.flake8]  # configured in .flake8
+[tool.darglint]  # configured in .flake8
+
+[tool.black]
+line-length = 120
+target-version = ["py39"]
+
+[tool.mypy]
+ignore_missing_imports = true
