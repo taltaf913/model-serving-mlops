@@ -37,12 +37,8 @@
 
 # COMMAND ----------
 
-dbutils.widgets.dropdown(
-    "env", "prod", ["staging", "prod"], "Environment(for input data)"
-)
-dbutils.widgets.dropdown(
-    "run_mode", "disabled", ["disabled", "dry_run", "enabled"], "Run Mode"
-)
+dbutils.widgets.dropdown("env", "prod", ["staging", "prod"], "Environment(for input data)")
+dbutils.widgets.dropdown("run_mode", "disabled", ["disabled", "dry_run", "enabled"], "Run Mode")
 dbutils.widgets.text(
     "experiment_name",
     "/model-serving-mlops/model-serving-mlops-experiment-test",
@@ -137,9 +133,7 @@ elif env == "staging":
     # TODO(required) : set data for staging workspace
     data = None
 else:
-    raise Exception(
-        "Unknown environment. Please select 'prod' or 'staging' as environment name"
-    )
+    raise Exception("Unknown environment. Please select 'prod' or 'staging' as environment name")
 
 # The string name of a column from data that contains evaluation labels.
 # Call get_targets_from_recipe() to get targets from recipe configs if mlflow recipe is used.
@@ -174,9 +168,7 @@ evaluator_config = {}
 
 # helper methods
 def get_run_link(run_info):
-    return "[Run](#mlflow/experiments/{0}/runs/{1})".format(
-        run_info.experiment_id, run_info.run_id
-    )
+    return "[Run](#mlflow/experiments/{0}/runs/{1})".format(run_info.experiment_id, run_info.run_id)
 
 
 def get_training_run(model_name, model_version):
@@ -189,11 +181,7 @@ def generate_run_name(training_run):
 
 
 def generate_description(training_run):
-    return (
-        None
-        if not training_run
-        else "Model Training Details: {0}\n".format(get_run_link(training_run.info))
-    )
+    return None if not training_run else "Model Training Details: {0}\n".format(get_run_link(training_run.info))
 
 
 def log_to_model_description(run, success):
@@ -202,12 +190,8 @@ def log_to_model_description(run, success):
     status = "SUCCESS" if success else "FAILURE"
     if description != "":
         description += "\n\n---\n\n"
-    description += "Model Validation Status: {0}\nValidation Details: {1}".format(
-        status, run_link
-    )
-    client.update_model_version(
-        name=model_name, version=model_version, description=description
-    )
+    description += "Model Validation Status: {0}\nValidation Details: {1}".format(status, run_link)
+    client.update_model_version(name=model_name, version=model_version, description=description)
 
 
 # COMMAND ----------
@@ -222,11 +206,7 @@ with mlflow.start_run(
     with open(validation_thresholds_file, "w") as f:
         if validation_thresholds:
             for metric_name in validation_thresholds:
-                f.write(
-                    "{0:30}  {1}\n".format(
-                        metric_name, str(validation_thresholds[metric_name])
-                    )
-                )
+                f.write("{0:30}  {1}\n".format(metric_name, str(validation_thresholds[metric_name])))
     mlflow.log_artifact(validation_thresholds_file)
     try:
         eval_result = mlflow.evaluate(
@@ -237,31 +217,19 @@ with mlflow.start_run(
             evaluators=evaluators,
             validation_thresholds=validation_thresholds,
             custom_metrics=custom_metrics,
-            baseline_model=None
-            if not enable_baseline_comparison
-            else baseline_model_uri,
+            baseline_model=None if not enable_baseline_comparison else baseline_model_uri,
             evaluator_config=evaluator_config,
         )
         metrics_file = os.path.join(tmp_dir, "metrics.txt")
         with open(metrics_file, "w") as f:
-            f.write(
-                "{0:30}  {1:30}  {2}\n".format("metric_name", "candidate", "baseline")
-            )
+            f.write("{0:30}  {1:30}  {2}\n".format("metric_name", "candidate", "baseline"))
             for metric in eval_result.metrics:
                 candidate_metric_value = str(eval_result.metrics[metric])
                 baseline_metric_value = "N/A"
                 if metric in eval_result.baseline_model_metrics:
-                    mlflow.log_metric(
-                        "baseline_" + metric, eval_result.baseline_model_metrics[metric]
-                    )
-                    baseline_metric_value = str(
-                        eval_result.baseline_model_metrics[metric]
-                    )
-                f.write(
-                    "{0:30}  {1:30}  {2}\n".format(
-                        metric, candidate_metric_value, baseline_metric_value
-                    )
-                )
+                    mlflow.log_metric("baseline_" + metric, eval_result.baseline_model_metrics[metric])
+                    baseline_metric_value = str(eval_result.baseline_model_metrics[metric])
+                f.write("{0:30}  {1:30}  {2}\n".format(metric, candidate_metric_value, baseline_metric_value))
         mlflow.log_artifact(metrics_file)
         log_to_model_description(run, True)
     except Exception as err:

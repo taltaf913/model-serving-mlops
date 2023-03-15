@@ -37,7 +37,7 @@ with the appropriate credentials to access remote state.
 
 To track the state of deployed ML resources with Terraform, you must:
 1. Provision a [remote state backend](https://developer.hashicorp.com/terraform/language/settings/backends/configuration) and
-2. Configure Terraform to store state in the remote backend. 
+2. Configure Terraform to store state in the remote backend.
 
 By default, this repo is configured to store resource state in a dedicated
  Azure Blob Storage container ,
@@ -66,7 +66,7 @@ git add model-serving-mlops/terraform
 git commit -m "Add ML resource config"
 git push upstream add-ml-resource-config
 ```
-Open a pull request from the pushed branch. 
+Open a pull request from the pushed branch.
 CI will run and comment on the PR with a preview of the resources to be deployed.
 Once CI passes, merge the PR to deploy an initial set of ML resources.
 
@@ -88,11 +88,11 @@ principal corresponding to a particular environment has permissions to read the 
 * `MODIFY` permission for the output table if it pre-dates your job.
 
 ### Setting up model validation
-The model validation stack focuses on building a plug-and-play stack component for continuous deployment (CD) of models 
+The model validation stack focuses on building a plug-and-play stack component for continuous deployment (CD) of models
 in staging and prod.
 Its central purpose is to evaluate a registered model and validate its quality before deploying the model to Production/Staging.
 
-The model validation job is implemented in [notebooks/ModelValidation](../validation/notebooks/ModelValidation.py). The model validation stack is defined in 
+The model validation job is implemented in [notebooks/ModelValidation](../validation/notebooks/ModelValidation.py). The model validation stack is defined in
 [staging/training-job.tf](./staging/training-job.tf) and [prod/training-job.tf](./prod/training-job.tf).
 As part of the workflow, model validation runs after training and before the deployment.
 
@@ -126,16 +126,16 @@ resource "databricks_job" "batch_inference_job" {
 
 The example above defines a Databricks job with name `staging-model-serving-mlops-batch-inference-job`
 that runs the notebook under `model-serving-mlops/deployment/batch_inference/notebooks/BatchInference.py` to regularly apply your ML model
-for batch inference. 
+for batch inference.
 
 At the start of the resource definition, we specify its type (`databricks_job`)
 and assign it the local name ``batch_inference_job``. The local name is a variable
 name that allows referencing the job within the same ``.tf`` file, but has no bearing
 on the job's name in Databricks.
 
-To test out a config change, simply edit one of the fields above, e.g. 
-increase cluster size by bumping `num_workers` from 3 to 4. 
-The list of supported fields and additional examples for all Databricks resources can be found in the 
+To test out a config change, simply edit one of the fields above, e.g.
+increase cluster size by bumping `num_workers` from 3 to 4.
+The list of supported fields and additional examples for all Databricks resources can be found in the
 [Databricks Terraform Provider docs](https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/job).
 In general, the field names and types match those provided by the Databricks REST API.
 

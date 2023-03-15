@@ -17,7 +17,7 @@ the [Project overview](docs/project-overview.md) and
 
 When you're satisfied with initial ML experimentation (e.g. validated that a model with reasonable performance can be
 trained on your dataset) and ready to deploy production training/inference
-pipelines, ask your ops team to follow the [MLOps setup guide](docs/mlops-setup.md) to configure CI/CD and deploy 
+pipelines, ask your ops team to follow the [MLOps setup guide](docs/mlops-setup.md) to configure CI/CD and deploy
 production ML pipelines.
 
 After that, follow the [ML pull request guide](docs/ml-pull-request.md)
