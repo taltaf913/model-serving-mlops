@@ -36,5 +36,6 @@ jobs:
         env:
           MLFLOW_TRACKING_URI: databricks
         run: |
+          pip install .        
           pip install mlflow
           python model_serving_mlops/deployment/deploy.py "${{ github.event.inputs.modelUri }}" "prod"
