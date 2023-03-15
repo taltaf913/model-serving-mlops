@@ -88,7 +88,7 @@ resource "databricks_job" "model_training_job" {
   }
 
   schedule {
-    quartz_cron_expression = "0 0 9 * * ?" # daily at 9am
+    quartz_cron_expression = "0 0 8 * * ?" # daily at 9am
     timezone_id            = "UTC"
   }
 
