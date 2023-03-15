@@ -23,7 +23,7 @@ resource "databricks_job" "model_training_job" {
       data_security_mode = "SINGLE_USER"
       custom_tags        = { "clusterSource" = "mlops-stack/0.0" }
     }
-  }  
+  }
 
   task {
     task_key = "Train"
