@@ -11,3 +11,7 @@ target-version = ["py39"]
 
 [tool.mypy]
 ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = "--cov model-serving-mlops --cov-branch --doctest-modules -m 'not data' --ignore-glob **/bootstrap.py"
