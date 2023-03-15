@@ -22,20 +22,26 @@ env:
 
 jobs:
   staging:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     environment: staging
+    
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-      - uses: actions/setup-python@v2
+
+      - name: Set up Python 
+        uses: actions/setup-python@v2
         with:
-          python-version: 3.9        
+          python-version: 3.9     
+
       - name: Generate AAD Token
         run: ./.github/workflows/scripts/generate-aad-token.sh ${{ secrets.stagingAzureSpTenantId }} ${{ secrets.stagingAzureSpApplicationId }} ${{ secrets.stagingAzureSpClientSecret }}
+
+      - name: Install local package
+        run: pip install ./model_serving_mlops mlflow
+
       - name: Deploy model
         env:
           MLFLOW_TRACKING_URI: databricks
         run: |
-          pip install .
-          pip install mlflow
-          python model_serving_mlops/deployment/model_deployment/deploy.py "${{ github.event.inputs.modelUri }}" "staging"
+          python ./model_serving_mlops/deployment/model_deployment/deploy.py "${{ github.event.inputs.modelUri }}" "staging"
