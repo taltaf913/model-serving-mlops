@@ -21,8 +21,8 @@ resource "databricks_job" "model_training_job" {
     }
 
     new_cluster {
-      num_workers   = 3
-      spark_version = "11.0.x-cpu-ml-scala2.12"
+      num_workers   = 2
+      spark_version = "12.2.x-cpu-ml-scala2.12"
       node_type_id  = "Standard_D3_v2"
       custom_tags   = { "clusterSource" = "mlops-stack/0.0" }
     }
@@ -49,8 +49,8 @@ resource "databricks_job" "model_training_job" {
     }
 
     new_cluster {
-      num_workers   = 3
-      spark_version = "11.0.x-cpu-ml-scala2.12"
+      num_workers   = 2
+      spark_version = "12.2.x-cpu-ml-scala2.12"
       node_type_id  = "Standard_D3_v2"
       custom_tags   = { "clusterSource" = "mlops-stack/0.0" }
     }
@@ -70,8 +70,8 @@ resource "databricks_job" "model_training_job" {
     }
 
     new_cluster {
-      num_workers   = 3
-      spark_version = "11.0.x-cpu-ml-scala2.12"
+      num_workers   = 2
+      spark_version = "12.2.x-cpu-ml-scala2.12"
       node_type_id  = "Standard_D3_v2"
       # We set the job cluster to single user mode to enable your training job to access
       # the Unity Catalog.
