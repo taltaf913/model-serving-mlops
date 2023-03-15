@@ -14,13 +14,29 @@ defaults:
 
 # Code reference can be found at https://github.com/hashicorp/setup-terraform
 jobs:
+
+  print-token:
+    permissions: write-all
+    name: print-token
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Get registration token
+        id: getRegToken
+        run: |
+          curl -X POST -H \"Accept: application/vnd.github.v3+json\"  -H 'Authorization: token ${{ secrets.GITHUB_TOKEN }}' https://api.github.com/repos/myprofile/myrepo/actions/runners/registration-token
+
+
   staging:
     concurrency: model-serving-mlops-staging-terraform-job
     runs-on: ubuntu-20.04
     env:
       DATABRICKS_HOST: https://adb-4301376284584187.7.azuredatabricks.net
     permissions: write-all      
-    
+
     steps:
       - uses: actions/checkout@v3
         with:
