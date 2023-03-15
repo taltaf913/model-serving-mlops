@@ -1,0 +1,27 @@
+{
+  "model-serving-mlops_batch_inference_job_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "276003584931838"
+  },
+  "model-serving-mlops_experiment_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "414848167786010"
+  },
+  "model-serving-mlops_experiment_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "/model-serving-mlops/staging-model-serving-mlops-experiment"
+  },
+  "model-serving-mlops_model_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "staging-model-serving-mlops-model"
+  },
+  "model-serving-mlops_training_job_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "883271045249079"
+  }
+}
