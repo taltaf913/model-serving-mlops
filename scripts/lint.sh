@@ -12,6 +12,10 @@ pre-commit run black || FAILURE=true
 echo "flake8"
 pre-commit run flake8 || FAILURE=true
 
+# Us shellcheck to check for shell scripting style violations and common bugs
+echo "shellcheck"
+pre-commit run shellcheck || FAILURE=true
+
 # Use mypy to check python types
 echo "mypy"
 pre-commit run mypy || FAILURE=true
