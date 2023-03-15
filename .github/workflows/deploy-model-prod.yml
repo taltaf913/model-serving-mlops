@@ -27,6 +27,9 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.9            
       - name: Generate AAD Token
         run: ./.github/workflows/scripts/generate-aad-token.sh ${{ secrets.prodAzureSpTenantId }} ${{ secrets.prodAzureSpApplicationId }} ${{ secrets.prodAzureSpClientSecret }}
       - name: Deploy model
