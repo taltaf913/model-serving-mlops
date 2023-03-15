@@ -34,4 +34,4 @@ jobs:
           MLFLOW_TRACKING_URI: databricks
         run: |
           pip install mlflow
-          python model-serving-mlops/deployment/model_deployment/deploy.py "${{ github.event.inputs.modelUri }}" "staging"
+          python ./model-serving-mlops/deployment/model_deployment/deploy.py "${{ github.event.inputs.modelUri }}" "staging"
