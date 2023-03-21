@@ -5,7 +5,7 @@ set +e  # temporarily disables the "exit immediately on error" option (-e) in Ba
 FAILURE=false
 
 # pytest configuration set in pyproject.toml
-python -m pytest || FAILURE=true # || operator means "or", so if pytest fails (i.e., returns a non-zero status code), then the FAILURE variable is set to true.
+pytest || FAILURE=true # || operator means "or", so if pytest fails (i.e., returns a non-zero status code), then the FAILURE variable is set to true.
 
 if [ "$FAILURE" = true ]; then
   echo "Unit tests failed"
