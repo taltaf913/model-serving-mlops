@@ -69,5 +69,5 @@ def get_model_name(env, test_mode=False):
         resource_name_suffix = _get_resource_name_suffix(test_mode)
         return f"model-serving-mlops-model{resource_name_suffix}"
     else:
-        # Read ml model name from model-serving-mlops/terraform
+        # Read ml model name from model_serving_mlops/terraform
         return _get_ml_config_value(env, "model-serving-mlops_model_name")

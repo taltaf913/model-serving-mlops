@@ -5,7 +5,7 @@
 # This notebook runs the MLflow Regression Recipe to train and registers an MLflow model in the model registry.
 #
 # It's run as part of CI (to integration-test model training logic) and by an automated model training job
-# defined under ``model-serving-mlops/terraform``
+# defined under ``model_serving_mlops/terraform``
 #
 # NOTE: In general, we recommend that you do not modify this notebook directly, and instead update data-loading
 # and model training logic in Python modules under the `steps` directory.

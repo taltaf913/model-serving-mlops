@@ -3,7 +3,7 @@
 # Batch Inference Notebook
 #
 # This notebook is an example of applying a model for batch inference against an input delta table,
-# writing output to a delta table. It's scheduled as a batch inference job defined under ``model-serving-mlops/terraform``
+# writing output to a delta table. It's scheduled as a batch inference job defined under ``model_serving_mlops/terraform``
 #
 # Parameters:
 #

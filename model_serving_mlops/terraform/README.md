@@ -9,7 +9,7 @@
 
 ## Intro
 
-This directory (`model-serving-mlops/terraform`) includes Databricks ML resource configuration, i.e. the definitions of a batch
+This directory (`model_serving_mlops/terraform`) includes Databricks ML resource configuration, i.e. the definitions of a batch
 inference job, a training job, an MLflow experiment, and an MLflow model.
 Configurations are split into separate `staging` and `prod` subdirectories
 for separate environments (separate staging/prod Databricks workspaces), and are expressed in
@@ -59,10 +59,10 @@ Authentication to Databricks REST APIs will not work if plans are executed remot
 
 ## Deploy initial ML resources
 After completing the prerequisites, create and push a PR branch adding
-the contents of `model-serving-mlops/terraform` to the Git repo:
+the contents of `model_serving_mlops/terraform` to the Git repo:
 ```
 git checkout -b add-ml-resource-config
-git add model-serving-mlops/terraform
+git add model_serving_mlops/terraform
 git commit -m "Add ML resource config"
 git push upstream add-ml-resource-config
 ```
@@ -76,7 +76,7 @@ batch inference job.
 ### Setting up batch inference job
 The batch inference job expects an input Delta table that with a schema that your registered model accepts. To use the batch
 inference job, set up such a Delta table in both your staging and prod workspace.
-Then, resolve the TODOs in `model-serving-mlops/terraform/staging/inference-job.tf` and `model-serving-mlops/terraform/prod/inference-job.tf`, passing
+Then, resolve the TODOs in `model_serving_mlops/terraform/staging/inference-job.tf` and `model_serving_mlops/terraform/prod/inference-job.tf`, passing
 the name of the input Delta table and the name of the output Delta table to which to write
 batch predictions as job parameters.
 
@@ -104,7 +104,7 @@ Then update `run_mode` in [staging/training-job.tf](./staging/training-job.tf) a
 
 Once model validation is in enabled or dry run mode, the model validation result will be logged to the description of the registered model version.
 ## Develop and test config changes
-To get started, open `model-serving-mlops/terraform/staging/inference-job.tf`.  The file contains the ML resource definition of
+To get started, open `model_serving_mlops/terraform/staging/inference-job.tf`.  The file contains the ML resource definition of
 a batch inference job, like:
 
 ```$xslt

@@ -5,8 +5,8 @@ experiment:
 # server that’s different from the tracking server.
 model_registry:
   # The MLflow registered model name under which to register model versions
-  # In prod, we log to the model provisioned through ML configs under model-serving-mlops/terraform
-  # See model-serving-mlops/terraform/README.md for details
+  # In prod, we log to the model provisioned through ML configs under model_serving_mlops/terraform
+  # See model_serving_mlops/terraform/README.md for details
   model_name: {{ ('../../terraform/output/staging.json' | from_json)["model-serving-mlops_model_name"]["value"]}}
 
 # Override the default train / validation / test dataset split ratios

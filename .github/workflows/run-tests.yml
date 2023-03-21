@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   pull_request:
     paths-ignore:
-      - 'model-serving-mlops/terraform/**'
+      - 'model_serving_mlops/terraform/**'
 
 env:
   DATABRICKS_HOST: https://adb-4301376284584187.7.azuredatabricks.net

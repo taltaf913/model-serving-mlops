@@ -1,5 +1,5 @@
 # This GitHub workflow deploys Terraform resources (ML resource config and more)
-# defined under model-serving-mlops/terraform, when PRs are merged into the default branch
+# defined under model_serving_mlops/terraform, when PRs are merged into the default branch
 name: Terraform Deployment for model-serving-mlops
 
 on:
@@ -7,14 +7,14 @@ on:
     branches:
       - 'main'
     paths:
-      - 'model-serving-mlops/terraform/**'
+      - 'model_serving_mlops/terraform/**'
   workflow_dispatch:
 
 permissions: write-all
 
 defaults:
   run:
-    working-directory: ./model-serving-mlops/terraform
+    working-directory: ./model_serving_mlops/terraform
 
 jobs:
 

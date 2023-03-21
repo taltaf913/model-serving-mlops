@@ -21,7 +21,7 @@ pipelines, ask your ops team to follow the [MLOps setup guide](docs/mlops-setup.
 production ML pipelines.
 
 After that, follow the [ML pull request guide](docs/ml-pull-request.md)
-and [ML resource config guide](model-serving-mlops/terraform/README.md) to propose, test, and deploy changes to production ML code (e.g. update model parameters)
+and [ML resource config guide](model_serving_mlops/terraform/README.md) to propose, test, and deploy changes to production ML code (e.g. update model parameters)
 or pipeline resources (e.g. use a larger instance type for model training) via pull request.
 
 | Role                          | Goal                                                                          | Docs                                                                                                                                                                |
@@ -29,7 +29,7 @@ or pipeline resources (e.g. use a larger instance type for model training) via p
 | First-time users of this repo | Understand the ML pipeline and code structure in this repo                    | [Project overview](docs/project-overview.md)                                                                                                                        |
 | Data Scientist                | Get started writing ML code for a brand new project                           | [ML quickstart](docs/ml-developer-guide.md) |
 | Data Scientist                | Update production ML code (e.g. model training logic) for an existing project | [ML pull request guide](docs/ml-pull-request.md)                                                                                                                    |
-| Data Scientist                | Modify production model ML resources, e.g. model training or inference jobs   | [ML resource config guide](model-serving-mlops/terraform/README.md)                                                                                       |
+| Data Scientist                | Modify production model ML resources, e.g. model training or inference jobs   | [ML resource config guide](model_serving_mlops/terraform/README.md)                                                                                       |
 | MLOps / DevOps                | Set up CI/CD and ML pipeline resource deployment for the current ML project   | [MLOps setup guide](docs/mlops-setup.md)                                                                                                                            |
 
 ## Monorepo
