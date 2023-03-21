@@ -16,6 +16,9 @@ def process_splits(
         train_df (pd.DataFrame): The training dataset produced by the data splitting procedure.
         validation_df (pd.DataFrame): The validation dataset produced by the data splitting procedure.
         test_df (pd.DataFrame): The test dataset produced by the data splitting procedure.
+
+    Returns:
+        tuple: Tuple of pandas DataFrames of processed splits
     """
 
     def process(df: pd.DataFrame):
