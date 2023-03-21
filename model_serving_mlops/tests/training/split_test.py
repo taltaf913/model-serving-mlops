@@ -1,8 +1,8 @@
-import pytest
 import os
+
+from model_serving_mlops.training.steps.split import process_splits
 import pandas as pd
-from pandas import DataFrame
-from training.steps.split import process_splits
+import pytest
 
 
 @pytest.fixture
@@ -15,9 +15,9 @@ def test_post_split_fn_returns_datasets_with_correct_spec(sample_data):
     validation = sample_data[4:7]
     test = sample_data[7:10]
     (train_processed, validation_processed, test_processed) = process_splits(train, validation, test)
-    assert isinstance(train_processed, DataFrame)
-    assert isinstance(validation_processed, DataFrame)
-    assert isinstance(test_processed, DataFrame)
+    assert isinstance(train_processed, pd.DataFrame)
+    assert isinstance(validation_processed, pd.DataFrame)
+    assert isinstance(test_processed, pd.DataFrame)
 
 
 def test_post_split_fn_returns_non_empty_datasets(sample_data):

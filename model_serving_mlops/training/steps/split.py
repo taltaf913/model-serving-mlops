@@ -1,27 +1,27 @@
-"""
-This module defines the following routines used by the 'split' step of the regression recipe:
+"""This module defines the following routines used by the 'split' step of the regression recipe.
 
 - ``process_splits``: Defines customizable logic for processing & cleaning the training, validation,
   and test datasets produced by the data splitting procedure.
 """
 
-from pandas import DataFrame
+import pandas as pd
 
 
 def process_splits(
-    train_df: DataFrame, validation_df: DataFrame, test_df: DataFrame
-) -> (DataFrame, DataFrame, DataFrame):
-    """
-    Perform additional processing on the split datasets.
+    train_df: pd.DataFrame, validation_df: pd.DataFrame, test_df: pd.DataFrame
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Perform additional processing on the split datasets.
 
-    :param train_df: The training dataset produced by the data splitting procedure.
-    :param validation_df: The validation dataset produced by the data splitting procedure.
-    :param test_df: The test dataset produced by the data splitting procedure.
-    :return: A tuple containing, in order: the processed training dataset, the processed
-             validation dataset, and the processed test dataset.
+    Args:
+        train_df (pd.DataFrame): The training dataset produced by the data splitting procedure.
+        validation_df (pd.DataFrame): The validation dataset produced by the data splitting procedure.
+        test_df (pd.DataFrame): The test dataset produced by the data splitting procedure.
+
+    Returns:
+        tuple: Tuple of pandas DataFrames of processed splits
     """
 
-    def process(df: DataFrame):
+    def process(df: pd.DataFrame):
         # Drop invalid data points
         cleaned = df.dropna()
         # Filter out invalid fare amounts and trip distance

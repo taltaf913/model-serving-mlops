@@ -1,9 +1,9 @@
-import pytest
 import os
 import tempfile
+
+from model_serving_mlops.training.steps.ingest import load_file_as_dataframe
 import pandas as pd
-from pandas import DataFrame
-from training.steps.ingest import load_file_as_dataframe
+import pytest
 
 
 @pytest.fixture
@@ -17,4 +17,4 @@ def test_ingest_function_reads_csv_correctly(sample_data):
     sample_data.to_csv(csv_path)
 
     ingested = load_file_as_dataframe(csv_path, "csv")
-    assert isinstance(ingested, DataFrame)
+    assert isinstance(ingested, pd.DataFrame)

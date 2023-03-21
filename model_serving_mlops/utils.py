@@ -1,17 +1,17 @@
-"""
-This module contains utils shared between different notebooks
-"""
+"""This module contains utils shared between different notebooks."""
 import json
-import mlflow
 import os
 
 
-def get_deployed_model_stage_for_env(env):
-    """
-    Get the model version stage under which the latest deployed model version can be found
-    for the current environment
-    :param env: Current environment
-    :return: Model version stage
+def get_deployed_model_stage_for_env(env: str) -> str:
+    """Get the model version stage.
+    Stage under which the latest deployed model version can be found for the current environment.
+
+    Args:
+        env (str): Current environment
+
+    Returns:
+        str:  Model version stage
     """
     # For a registered model version to be served, it needs to be in either the Staging or Production
     # model registry stage
@@ -26,7 +26,7 @@ def get_deployed_model_stage_for_env(env):
     return _MODEL_STAGE_FOR_ENV[env]
 
 
-def _get_ml_config_value(env, key):
+def _get_ml_config_value(env: str, key: str):
     # Reading ml config from terraform output file for the respective key and env(staging/prod).
     conf_file_path = os.path.join(os.pardir, "model-serving-mlops", "terraform", "output", f"{env}.json")
     try:
@@ -35,7 +35,7 @@ def _get_ml_config_value(env, key):
     except FileNotFoundError as e:
         raise RuntimeError(
             f"Unable to find file '{conf_file_path}'. Make sure ML config-as-code resources defined under "
-            f"model-serving-mlops have been deployed to {env} (see model-serving-mlops"
+            f"model-serving-mlops have been deployed to {env} (see model_serving_mlops"
             f"/terraform/README in the current git repo for details)"
         ) from e
     try:
@@ -46,24 +46,25 @@ def _get_ml_config_value(env, key):
         ) from e
 
 
-def _get_resource_name_suffix(test_mode):
+def _get_resource_name_suffix(test_mode: str):
     if test_mode:
         return "-test"
     else:
         return ""
 
 
-def get_model_name(env, test_mode=False):
-    """
-    Get the registered model name for the current environment.
+def get_model_name(env: str, test_mode: bool = False):
+    """Get the registered model name for the current environment.
 
     In dev or when running integration tests, we rely on a hardcoded model name.
-    Otherwise, e.g. in production jobs, we read the model name from Terraform config-as-code output
+    Otherwise, e.g. in production jobs, we read the model name from Terraform config-as-code output.
 
-    :param env: Current environment
-    :param test_mode: Whether the notebook is running in test mode.
+    Args:
+        env (str): Current environment
+        test_mode (bool, optional): Whether the notebook is running in test mode.. Defaults to False.
 
-    :return: Registered Model name.
+    Returns:
+        _type_: Registered Model name.
     """
     if env == "dev" or test_mode:
         resource_name_suffix = _get_resource_name_suffix(test_mode)

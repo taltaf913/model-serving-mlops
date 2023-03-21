@@ -1,4 +1,4 @@
-from training.steps.transform import transformer_fn
+from model_serving_mlops.training.steps.transform import transformer_fn
 
 
 def test_tranform_fn_returns_object_with_correct_spec():
