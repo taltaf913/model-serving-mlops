@@ -1,4 +1,4 @@
-from training.steps.train import estimator_fn
+from model_serving_mlops.training.steps.train import estimator_fn
 from sklearn.utils.estimator_checks import check_estimator
 
 
