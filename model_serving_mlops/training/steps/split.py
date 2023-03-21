@@ -9,7 +9,7 @@ import pandas as pd
 
 def process_splits(
     train_df: pd.DataFrame, validation_df: pd.DataFrame, test_df: pd.DataFrame
-) -> tuple(pd.DataFrame, pd.DataFrame, pd.DataFrame):
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Perform additional processing on the split datasets.
 
     Args:
