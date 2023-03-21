@@ -24,8 +24,7 @@ jobs:
             pip install -r requirements.txt
             pip install -r test-requirements.txt
       - name: Run unit tests
-        run: |
-          ./scripts/unit_test.sh
+        run: pytest
 
   integration_test:
     needs: unit_tests
