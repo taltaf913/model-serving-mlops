@@ -1,5 +1,5 @@
-from mlflow.tracking import MlflowClient
 import sys
+from mlflow.tracking import MlflowClient
 
 from model_serving_mlops.utils import get_deployed_model_stage_for_env
 
