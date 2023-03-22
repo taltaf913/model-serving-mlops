@@ -29,7 +29,7 @@ resource "databricks_job" "model_training_job" {
     task_key = "Train"
 
     notebook_task {
-      notebook_path = "model-serving-mlops/training/notebooks/Train"
+      notebook_path = "model_serving_mlops/training/notebooks/Train"
       base_parameters = {
         env = local.env
       }
@@ -46,7 +46,7 @@ resource "databricks_job" "model_training_job" {
     }
 
     notebook_task {
-      notebook_path = "model-serving-mlops/validation/notebooks/ModelValidation"
+      notebook_path = "model_serving_mlops/validation/notebooks/ModelValidation"
       base_parameters = {
         env             = local.env
         experiment_name = databricks_mlflow_experiment.experiment.name
@@ -70,7 +70,7 @@ resource "databricks_job" "model_training_job" {
     }
 
     notebook_task {
-      notebook_path = "model-serving-mlops/deployment/model_deployment/notebooks/TriggerModelDeploy"
+      notebook_path = "model_serving_mlops/deployment/model_deployment/notebooks/TriggerModelDeploy"
       base_parameters = {
         env = local.env
       }
