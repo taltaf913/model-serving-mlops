@@ -22,7 +22,7 @@ resource "databricks_job" "batch_inference_job" {
   }
 
   notebook_task {
-    notebook_path = "model-serving-mlops/deployment/batch_inference/notebooks/BatchInference"
+    notebook_path = "model_serving_mlops/deployment/batch_inference/notebooks/BatchInference"
     base_parameters = {
       env = local.env
       # TODO: Specify input and output table names for batch inference here
