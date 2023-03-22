@@ -70,3 +70,12 @@ jobs:
             }
 
           pr-comment-github-token: ${{ secrets.GITHUB_TOKEN }}
+
+    # Additional steps for model serving
+    # register model
+    # get model URI
+    # spin up model serving infra via terraform
+    # trigger end point with test instances
+    # tear down end point
+      # terraform destroy -target=module.model_serving.test_endpoint
+
