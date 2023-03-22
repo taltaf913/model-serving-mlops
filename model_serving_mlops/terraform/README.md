@@ -118,14 +118,14 @@ resource "databricks_job" "batch_inference_job" {
   }
 
   notebook_task {
-    notebook_path = "model-serving-mlops/deployment/batch_inference/notebooks/BatchInference"
+    notebook_path = "model_serving_mlops/deployment/batch_inference/notebooks/BatchInference"
   }
   ...
 }
 ```
 
 The example above defines a Databricks job with name `staging-model-serving-mlops-batch-inference-job`
-that runs the notebook under `model-serving-mlops/deployment/batch_inference/notebooks/BatchInference.py` to regularly apply your ML model
+that runs the notebook under `model_serving_mlops/deployment/batch_inference/notebooks/BatchInference.py` to regularly apply your ML model
 for batch inference.
 
 At the start of the resource definition, we specify its type (`databricks_job`)

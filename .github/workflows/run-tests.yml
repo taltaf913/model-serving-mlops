@@ -38,7 +38,7 @@ jobs:
         uses: databricks/run-notebook@v0
         id: train
         with:
-          local-notebook-path: model-serving-mlops/training/notebooks/Train.py
+          local-notebook-path: model_serving_mlops/training/notebooks/Train.py
           git-commit: ${{ github.event.pull_request.head.sha || github.sha }}
           git-provider: gitHub
           new-cluster-json: >
