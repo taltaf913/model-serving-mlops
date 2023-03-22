@@ -26,8 +26,8 @@ resource "databricks_job" "batch_inference_job" {
     base_parameters = {
       env = local.env
       # TODO: Specify input and output table names for batch inference here
-      input_table_name  = ""
-      output_table_name = "modelservingmlops_predictions"
+      input_table_name  = "model_serving_mlops.inference_table"
+      output_table_name = "model_serving_mlops.predictions_table"
     }
   }
 
