@@ -42,10 +42,10 @@ set up a state storage backend for ML resources (jobs, experiments, etc) created
 current ML project.
 ## Configure profiles for tests, staging, and prod
 Address the TODOs in the following files:
-* [databricks-test.yaml](../model-serving-mlops/training/profiles/databricks-test.yaml): specify recipe configs to use in integration tests
-* [databricks-staging.yaml](../model-serving-mlops/training/profiles/databricks-staging.yaml): specify recipe configs to use in recurring model training and batch inference
+* [databricks-test.yaml](../model_serving_mlops/training/profiles/databricks-test.yaml): specify recipe configs to use in integration tests
+* [databricks-staging.yaml](../model_serving_mlops/training/profiles/databricks-staging.yaml): specify recipe configs to use in recurring model training and batch inference
   jobs that run in the staging workspace
-* [databricks-prod.yaml](../model-serving-mlops/training/profiles/databricks-prod.yaml) specify recipe configs to use in recurring model training and batch inference
+* [databricks-prod.yaml](../model_serving_mlops/training/profiles/databricks-prod.yaml) specify recipe configs to use in recurring model training and batch inference
   jobs that run in the prod workspace
 
 ## Merge a PR with your initial ML code
