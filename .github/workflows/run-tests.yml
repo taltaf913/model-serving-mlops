@@ -71,6 +71,10 @@ jobs:
 
           pr-comment-github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Model serving test
+
+
+
     # Additional steps for model serving
     # register model
     # get model URI
