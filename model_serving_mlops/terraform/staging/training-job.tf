@@ -80,6 +80,23 @@ resource "databricks_job" "model_training_job" {
 
   }
 
+  task {
+    task_key = "TriggerModelServing"
+    depends_on {
+      task_key = "TriggerModelDeploy"
+    }
+
+    notebook_task {
+      notebook_path = "model_serving_mlops/deployment/model_deployment/notebooks/TriggerModelServing"
+      base_parameters = {
+        env = local.env
+      }
+    }
+
+    job_cluster_key = "model-training-deployment-cluster"
+
+  }  
+
   git_source {
     url      = var.git_repo_url
     provider = "gitHub"
