@@ -182,7 +182,7 @@ def get_model_endpoint_config(api_client: ApiClient, endpoint_name: str) -> dict
         return None
 
 
-def deploy_model_serving_endpoint(model_name: str, model_version: int, endpoint_name: str):
+def deploy_model_serving_endpoint(endpoint_name: str, model_name: str, model_version: int):
 
     api_client = get_api_clent()
     df = prepare_scoring_data[:10]
@@ -198,7 +198,7 @@ def deploy_model_serving_endpoint(model_name: str, model_version: int, endpoint_
     test_endpoint(endpoint_name, 1000, 1, df)
 
 
-def perform_integration_test(model_name: str, model_version: int, endpoint_name: str, p95_threshold: int, qps_threshold: int):
+def perform_integration_test(endpoint_name: str, model_name: str, model_version: int, p95_threshold: int, qps_threshold: int):
     api_client = get_api_clent()
     test_data_df = prepare_scoring_data[:10]
     create_serving_endpoint(
