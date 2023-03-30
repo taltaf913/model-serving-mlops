@@ -85,7 +85,7 @@ jobs:
                   }
                 ],
               "git_source": {
-                "git_url": "${{ github.repository }}",
+                "git_url": "https://github.com/${{ github.repository }}.git",
                 "git_commit": "${{ github.event.pull_request.head.sha || github.sha }}",
                 "git_provider": "gitHub"
               }
