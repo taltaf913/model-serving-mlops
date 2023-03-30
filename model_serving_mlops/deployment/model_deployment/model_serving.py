@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import pathlib
 import time
@@ -13,6 +14,8 @@ import numpy as np
 import pandas as pd
 import requests
 from requests.exceptions import HTTPError
+
+logger = logging.getLogger(__name__)
 
 
 def prepare_scoring_data() -> pd.DataFrame:
@@ -30,7 +33,10 @@ def get_model_version_for_stage(model_name: str, stage: str) -> str:
 
 
 def get_api_clent() -> ApiClient:
+    logger.info("Getting config using EnvironmentVariableConfigProvider...")
     config = EnvironmentVariableConfigProvider().get_config()
+    logger.info(f"config: {config}")
+    logger.info(f"_get_api_client")
     api_client = _get_api_client(config, command_name="")
     return api_client
 
@@ -186,6 +192,7 @@ def deploy_model_serving_endpoint(endpoint_name: str, model_name: str, model_ver
 def perform_integration_test(
     endpoint_name: str, model_name: str, model_version: int, p95_threshold: int, qps_threshold: int
 ):
+    logger.info("Getting api_client...")
     api_client = get_api_clent()
     test_data_df = prepare_scoring_data[:10]
     create_serving_endpoint(api_client, endpoint_name, model_name, model_version)
