@@ -1,7 +1,7 @@
 # Databricks notebook source
 ##################################################################################
-# Helper notebook to set up a Databricks Model Serving endpoint. 
-# This notebook is run after the TriggerModelDeploy.py notebook as part of a multi-task job, 
+# Helper notebook to set up a Databricks Model Serving endpoint.
+# This notebook is run after the TriggerModelDeploy.py notebook as part of a multi-task job,
 # in order to set up a Model Serving endpoint following the deployment step.
 #
 #
@@ -51,7 +51,10 @@ assert model_version != "", "model_version notebook parameter must be specified"
 
 
 # COMMAND ----------
-from model_serving_mlops.deployment.model_deployment.model_serving import deploy_model_serving_endpoint, perform_integration_test
+from model_serving_mlops.deployment.model_deployment.model_serving import (
+    deploy_model_serving_endpoint,
+    perform_integration_test,
+)
 
 if test_mode:
     endpoint_name = f"{model_name}-integration-test-endpoint"

@@ -2,17 +2,17 @@ import json
 import os
 import pathlib
 import time
-from typing import dict, Any
+from typing import Any
 
 from databricks_cli.configure.config import _get_api_client
 from databricks_cli.configure.provider import EnvironmentVariableConfigProvider
 from databricks_cli.sdk import ApiClient
 from mlflow.tracking import MlflowClient
+from model_serving_mlops.training.steps.transform import transformer_fn
 import numpy as np
 import pandas as pd
 import requests
-
-from model_serving_mlops.training.steps.transform import transformer_fn
+from requests.exceptions import HTTPError
 
 
 def prepare_scoring_data() -> pd.DataFrame:
@@ -40,9 +40,7 @@ def read_config(file_name: str) -> dict[str, str]:
     return json.loads(file_content)
 
 
-def create_serving_endpoint(
-    api_client: ApiClient, endpoint_name: str, model_name: str, model_version: str
-):
+def create_serving_endpoint(api_client: ApiClient, endpoint_name: str, model_name: str, model_version: str):
     req = {
         "name": endpoint_name,
         "config": {
@@ -55,9 +53,7 @@ def create_serving_endpoint(
                     "scale_to_zero_enabled": False,
                 }
             ],
-            "traffic_config": {
-                "routes": [{"served_model_name": model_name, "traffic_percentage": 100}]
-            },
+            "traffic_config": {"routes": [{"served_model_name": model_name, "traffic_percentage": 100}]},
         },
     }
     return api_client.perform_query("POST", "/serving-endpoints", data=req)
@@ -101,9 +97,7 @@ def query_endpoint(endpoint_name: str, df: pd.DataFrame) -> tuple[Any, int]:
     response = requests.request(method="POST", headers=headers, url=url, data=data_json)
     end_time = time.time_ns()
     if response.status_code != 200:
-        raise Exception(
-            f"Request failed with status {response.status_code}, {response.text}"
-        )
+        raise Exception(f"Request failed with status {response.status_code}, {response.text}")
     return response.json(), (end_time - start_time) / 1_000_000
 
 
@@ -114,7 +108,7 @@ def test_endpoint(
     test_data_df: pd.DataFrame,
 ):
     durations = []
-    for i in range(300):
+    for _ in range(300):
         res_json, duration = query_endpoint(endpoint_name, test_data_df)
         durations.append(duration)
         preds = res_json.get("predictions")
@@ -134,9 +128,7 @@ def test_endpoint(
         )
 
 
-def get_max_version_for_model(
-    api_client: ApiClient, endpoint_name: str, model_name: str
-):
+def get_max_version_for_model(api_client: ApiClient, endpoint_name: str, model_name: str):
     res = api_client.perform_query("GET", f"/serving-endpoints/{endpoint_name}")
     if res.status_code == 404:
         return None
@@ -164,13 +156,9 @@ def deploy_new_version_to_existing_endpoint(
                 "scale_to_zero_enabled": False,
             }
         ],
-        "traffic_config": {
-            "routes": [{"served_model_name": model_name, "traffic_percentage": 100}]
-        },
+        "traffic_config": {"routes": [{"served_model_name": model_name, "traffic_percentage": 100}]},
     }
-    res = api_client.perform_query(
-        "PUT", f"/serving-endpoints/{endpoint_name}/config", data=update_endpoint_req
-    )
+    res = api_client.perform_query("PUT", f"/serving-endpoints/{endpoint_name}/config", data=update_endpoint_req)
     print(res)
 
 
@@ -178,32 +166,29 @@ def get_model_endpoint_config(api_client: ApiClient, endpoint_name: str) -> dict
     try:
         res = api_client.perform_query("GET", f"/serving-endpoints/{endpoint_name}")
         return res
-    except:
+    except HTTPError:
         return None
 
 
 def deploy_model_serving_endpoint(endpoint_name: str, model_name: str, model_version: int):
-
     api_client = get_api_clent()
     df = prepare_scoring_data[:10]
     existing_endpoint_conf = get_model_endpoint_config(api_client, endpoint_name)
 
     if existing_endpoint_conf:
-        deploy_new_version_to_existing_endpoint(
-            api_client, endpoint_name, model_name, model_version
-        )
+        deploy_new_version_to_existing_endpoint(api_client, endpoint_name, model_name, model_version)
     else:
         create_serving_endpoint(api_client, endpoint_name, model_name, model_version)
     time.sleep(100)
     test_endpoint(endpoint_name, 1000, 1, df)
 
 
-def perform_integration_test(endpoint_name: str, model_name: str, model_version: int, p95_threshold: int, qps_threshold: int):
+def perform_integration_test(
+    endpoint_name: str, model_name: str, model_version: int, p95_threshold: int, qps_threshold: int
+):
     api_client = get_api_clent()
     test_data_df = prepare_scoring_data[:10]
-    create_serving_endpoint(
-        api_client, endpoint_name, model_name, model_version
-    )
+    create_serving_endpoint(api_client, endpoint_name, model_name, model_version)
     time.sleep(100)
     if wait_for_endpoint_to_become_ready(api_client, endpoint_name):
         test_endpoint(endpoint_name, p95_threshold, qps_threshold, test_data_df)

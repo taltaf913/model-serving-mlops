@@ -95,7 +95,7 @@ resource "databricks_job" "model_training_job" {
 
     job_cluster_key = "model-training-deployment-cluster"
 
-  }    
+  }
 
   git_source {
     url      = var.git_repo_url
