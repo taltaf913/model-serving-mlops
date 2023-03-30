@@ -61,9 +61,32 @@ jobs:
               "run_name": "integration-test",
               "tasks": [
                 {
-                  "task_key": "training",
+                  "task_key": "Train",
                   "notebook_task": {
                     "notebook_path": "model_serving_mlops/training/notebooks/Train",
+                    "base_parameters": {
+                        "env": "staging",
+                        "test_mode": "True"
+                      }
+                    },
+                  "new_cluster": {
+                    "spark_version": "12.2.x-cpu-ml-scala2.12",
+                    "node_type_id": "${{ env.NODE_TYPE_ID }}",
+                    "num_workers": 0,
+                    "spark_conf": {
+                      "spark.databricks.cluster.profile": "singleNode",
+                      "spark.master": "local[*, 4]"
+                      },
+                      "custom_tags": {
+                        "ResourceClass": "SingleNode",
+                        "clusterSource": "mlops-stack/0.0"
+                      }
+                    }
+                  },
+                {
+                  "task_key": "TriggerModelServing",
+                  "notebook_task": {
+                    "notebook_path": "model_serving_mlops/deployment/model_deployment/notebooks/TriggerModelServing",
                     "base_parameters": {
                         "env": "staging",
                         "test_mode": "True"
