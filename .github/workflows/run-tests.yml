@@ -53,7 +53,7 @@ jobs:
       - name: Generate AAD Token
         run: ./.github/workflows/scripts/generate-aad-token.sh ${{ secrets.stagingAzureSpTenantId }} ${{ secrets.stagingAzureSpApplicationId }} ${{ secrets.stagingAzureSpClientSecret }}
 
-      - name: Train model
+      - name: Integration Test - Databricks Multi-task Workflow
         run: |
           databricks jobs configure --version=2.1
           databricks runs submit --wait --json \
