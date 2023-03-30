@@ -139,7 +139,7 @@ def get_max_version_for_model(api_client: ApiClient, endpoint_name: str, model_n
     for model in served_models:
         if model["model_name"] == model_name:
             versions.append(model["model_version"])
-    max_version = str(max([int(x) for x in versions]))
+    max_version = str(max(int(x) for x in versions))
     return max_version
 
 
