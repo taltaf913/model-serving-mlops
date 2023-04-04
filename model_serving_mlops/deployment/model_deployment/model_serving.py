@@ -9,7 +9,7 @@ from typing import Any
 from databricks_cli.configure.config import _get_api_client
 from databricks_cli.configure.provider import EnvironmentVariableConfigProvider
 from databricks_cli.sdk import ApiClient
-from mlflow.tracking import MlflowClient
+from mlflow.client import MlflowClient
 from model_serving_mlops.training.steps.transform import transformer_fn
 import numpy as np
 import pandas as pd
@@ -17,6 +17,7 @@ import requests
 from requests.exceptions import HTTPError
 
 logger = logging.getLogger(__name__)
+mlflow_client = MlflowClient()
 
 
 def prepare_scoring_data() -> pd.DataFrame:
@@ -28,9 +29,13 @@ def prepare_scoring_data() -> pd.DataFrame:
 
 
 def get_model_version_for_stage(model_name: str, stage: str) -> str:
-    mlflow_client = MlflowClient()
     versions = mlflow_client.get_latest_versions(model_name, stages=[stage])
     return str(max([int(v.version) for v in versions]))
+
+
+def get_recent_model_version(name: str) -> int:
+    model_versions_list = mlflow_client.get_latest_versions(name)
+    return max(int(mv.version) for mv in model_versions_list)
 
 
 def get_api_clent() -> ApiClient:
@@ -209,7 +214,7 @@ def perform_integration_test(
 def _setup_parser():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--test-mode",
+        "--test_mode",
         type=bool,
         action="store_true",
         help="""Whether the current notebook is running in "test" mode. Defaults to False. 
@@ -218,20 +223,20 @@ def _setup_parser():
         """,
         )
     parser.add_argument(
-        "--model-name",
+        "--model_name",
         type=str,
         default=None,
         help="The name of the model in Databricks Model Registry to be served."
         )
     parser.add_argument(
-        "--model-version",
+        "--model_version",
         type=int,
         default=None,
         help="""The version of the model in Databricks Model Registry to be served. 
                 If None, most recent model version will be used."""
         )    
     parser.add_argument(
-        "--endpoint-name",
+        "--endpoint_name",
         type=int,
         default=None,
         help="""Name of the Databricks Model Serving Endpoint."""
@@ -239,17 +244,27 @@ def _setup_parser():
     
 
 def main(args):
-    if args.test_mode:
-        endpoint_name = f"{args.model_name}-integration-test-endpoint"
+    if args.test_mode:        
+        if not args.model_version:
+            model_version = get_recent_model_version(name=args.model_name)
+        else:
+            model_version = args.model_version
+        if not args.endpoint_name:
+            endpoint_name = f"{args.model_name}-integration-test-endpoint"
         perform_integration_test(endpoint_name, 
                                  args.model_name, 
-                                 args.model_version, 
+                                 model_version, 
                                  p95_threshold=1000, 
                                  qps_threshold=1)
 
     elif not args.test_mode:
-        endpoint_name = f"{args.model_name}-v{args.model_version}"
-        deploy_model_serving_endpoint(endpoint_name, args.model_name, args.model_version)
+        if not args.model_version:
+            model_version = get_recent_model_version() 
+        else:
+            model_version = args.model_version
+        if not args.endpoint_name:
+            endpoint_name = f"{args.model_name}-v{model_version}"
+        deploy_model_serving_endpoint(endpoint_name, args.model_name, model_version)
 
 
 if __name__ == "__main__":
