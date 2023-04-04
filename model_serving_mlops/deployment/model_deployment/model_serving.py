@@ -1,3 +1,4 @@
+import argparse
 import json
 import logging
 import os
@@ -203,3 +204,55 @@ def perform_integration_test(
     else:
         print("Endpoint failed to become ready within timeout. ")
         raise Exception("Endpoint failed to become ready within timeout. ")
+
+
+def _setup_parser():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--test-mode",
+        type=bool,
+        action="store_true",
+        help="""Whether the current notebook is running in "test" mode. Defaults to False. 
+                When test_mode is True, an integration test for the model serving endpoint is run.
+                If false, deploy model serving endpoint.
+        """,
+        )
+    parser.add_argument(
+        "--model-name",
+        type=str,
+        default=None,
+        help="The name of the model in Databricks Model Registry to be served."
+        )
+    parser.add_argument(
+        "--model-version",
+        type=int,
+        default=None,
+        help="""The version of the model in Databricks Model Registry to be served. 
+                If None, most recent model version will be used."""
+        )    
+    parser.add_argument(
+        "--endpoint-name",
+        type=int,
+        default=None,
+        help="""Name of the Databricks Model Serving Endpoint."""
+        )     
+    
+
+def main(args):
+    if args.test_mode:
+        endpoint_name = f"{args.model_name}-integration-test-endpoint"
+        perform_integration_test(endpoint_name, 
+                                 args.model_name, 
+                                 args.model_version, 
+                                 p95_threshold=1000, 
+                                 qps_threshold=1)
+
+    elif not args.test_mode:
+        endpoint_name = f"{args.model_name}-v{args.model_version}"
+        deploy_model_serving_endpoint(endpoint_name, args.model_name, args.model_version)
+
+
+if __name__ == "__main__":
+    parser = _setup_parser()
+    args = parser.parse_args()
+    main(args)    
