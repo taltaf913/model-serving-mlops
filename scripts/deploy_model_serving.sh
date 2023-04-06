@@ -8,8 +8,8 @@ echo "running model serving deployment"
 python ./model_serving_mlops/deployment/model_deployment/model_serving.py --model_name=staging-model-serving-mlops-model
 
 if [ "$FAILURE" = true ]; then
-  echo "Unit tests failed"
+  echo "Model Serving deployment failed"
   exit 1
 fi
-echo "Unit tests passed"
-exit 0
+echo "Model Serving deployment passed"
+exit 0 

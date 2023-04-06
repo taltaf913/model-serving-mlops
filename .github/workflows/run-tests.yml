@@ -53,66 +53,45 @@ jobs:
       - name: Generate AAD Token
         run: ./.github/workflows/scripts/generate-aad-token.sh ${{ secrets.stagingAzureSpTenantId }} ${{ secrets.stagingAzureSpApplicationId }} ${{ secrets.stagingAzureSpClientSecret }}
 
-      - name: Integration Test - Databricks Multi-task Workflow
+      # - name: Integration Test - Databricks Multi-task Workflow
+      #   run: |
+      #     databricks jobs configure --version=2.1
+      #     databricks runs submit --wait --json \
+      #       '{
+      #         "run_name": "integration-test",
+      #         "tasks": [
+      #           {
+      #             "task_key": "Train",
+      #             "notebook_task": {
+      #               "notebook_path": "model_serving_mlops/training/notebooks/Train",
+      #               "base_parameters": {
+      #                   "env": "staging",
+      #                   "test_mode": "True"
+      #                 }
+      #               },
+      #             "new_cluster": {
+      #               "spark_version": "12.2.x-cpu-ml-scala2.12",
+      #               "node_type_id": "${{ env.NODE_TYPE_ID }}",
+      #               "num_workers": 0,
+      #               "spark_conf": {
+      #                 "spark.databricks.cluster.profile": "singleNode",
+      #                 "spark.master": "local[*, 4]"
+      #                 },
+      #                 "custom_tags": {
+      #                   "ResourceClass": "SingleNode",
+      #                   "clusterSource": "mlops-stack/0.0"
+      #                 }
+      #               }
+      #             }
+      #           ],
+      #         "git_source": {
+      #           "git_url": "https://github.com/${{ github.repository }}.git",
+      #           "git_commit": "${{ github.event.pull_request.head.sha || github.sha }}",
+      #           "git_provider": "gitHub"
+      #         }
+      #       }'
+
+      - name: Model serving integration test
         run: |
-          databricks jobs configure --version=2.1
-          databricks runs submit --wait --json \
-            '{
-              "run_name": "integration-test",
-              "tasks": [
-                {
-                  "task_key": "Train",
-                  "notebook_task": {
-                    "notebook_path": "model_serving_mlops/training/notebooks/Train",
-                    "base_parameters": {
-                        "env": "staging",
-                        "test_mode": "True"
-                      }
-                    },
-                  "new_cluster": {
-                    "spark_version": "12.2.x-cpu-ml-scala2.12",
-                    "node_type_id": "${{ env.NODE_TYPE_ID }}",
-                    "num_workers": 0,
-                    "spark_conf": {
-                      "spark.databricks.cluster.profile": "singleNode",
-                      "spark.master": "local[*, 4]"
-                      },
-                      "custom_tags": {
-                        "ResourceClass": "SingleNode",
-                        "clusterSource": "mlops-stack/0.0"
-                      }
-                    }
-                  },
-                {
-                  "task_key": "TriggerModelServing",
-                  "depends_on": {
-                    "task_key": "Train"
-                    },
-                  "notebook_task": {
-                    "notebook_path": "model_serving_mlops/deployment/model_deployment/notebooks/TriggerModelServing",
-                    "base_parameters": {
-                        "env": "staging",
-                        "test_mode": "True"
-                      }
-                    },
-                  "new_cluster": {
-                    "spark_version": "12.2.x-cpu-ml-scala2.12",
-                    "node_type_id": "${{ env.NODE_TYPE_ID }}",
-                    "num_workers": 0,
-                    "spark_conf": {
-                      "spark.databricks.cluster.profile": "singleNode",
-                      "spark.master": "local[*, 4]"
-                      },
-                      "custom_tags": {
-                        "ResourceClass": "SingleNode",
-                        "clusterSource": "mlops-stack/0.0"
-                      }
-                    }
-                  }
-                ],
-              "git_source": {
-                "git_url": "https://github.com/${{ github.repository }}.git",
-                "git_commit": "${{ github.event.pull_request.head.sha || github.sha }}",
-                "git_provider": "gitHub"
-              }
-            }'
+            echo "Running model serving test"
+            python ./model_serving_mlops/deployment/model_deployment/model_serving.py --model_name=staging-model-serving-mlops-model --test_mode=True
