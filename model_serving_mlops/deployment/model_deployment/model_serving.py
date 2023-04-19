@@ -111,7 +111,7 @@ def wait_for_endpoint_to_become_ready(
 
 
 def query_endpoint(endpoint_name: str, df: pd.DataFrame) -> tuple[Any, int]:
-    url = f"{os.environ.get('DATABRICKS_HOST')}serving-endpoints/{endpoint_name}/invocations"
+    http_path = pathlib.Path(os.environ.get("DATABRICKS_HOST")) / "serving-endpoints" / endpoint_name / "invocations"
     headers = {
         "Authorization": f'Bearer {os.environ.get("DATABRICKS_TOKEN")}',
         "Content-Type": "application/json",
@@ -123,7 +123,7 @@ def query_endpoint(endpoint_name: str, df: pd.DataFrame) -> tuple[Any, int]:
     ds_dict = {"dataframe_split": df.to_dict(orient="split")}
     data_json = json.dumps(ds_dict, allow_nan=True)
     start_time = time.time_ns()
-    response = requests.request(method="POST", headers=headers, url=url, data=data_json)
+    response = requests.request(method="POST", headers=headers, url=str(http_path), data=data_json)
     end_time = time.time_ns()
     if response.status_code != 200:
         raise Exception(f"Request failed with status {response.status_code}, {response.text}")
@@ -137,7 +137,7 @@ def test_endpoint(
     test_data_df: pd.DataFrame,
 ):
     durations = []
-    for _ in range(25):
+    for _ in range(500):
         res_json, duration = query_endpoint(endpoint_name, test_data_df)
         durations.append(duration)
         preds = res_json.get("predictions")

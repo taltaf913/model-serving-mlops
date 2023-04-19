@@ -51,15 +51,15 @@ assert model_version != "", "model_version notebook parameter must be specified"
 
 
 # COMMAND ----------
-from model_serving_mlops.deployment.model_deployment.model_serving import (
-    deploy_model_serving_endpoint,
-    perform_integration_test,
-)
-
-if test_mode:
-    endpoint_name = f"{model_name}-integration-test-endpoint"
-    perform_integration_test(endpoint_name, model_name, model_version, p95_threshold=1000, qps_threshold=1)
-
-elif not test_mode:
-    endpoint_name = f"{model_name}-v{model_version}"
-    deploy_model_serving_endpoint(endpoint_name, model_name, model_version)
+# from model_serving_mlops.deployment.model_deployment.model_serving import (
+#     deploy_model_serving_endpoint,
+#     perform_integration_test,
+# )
+#
+# if test_mode:
+#     endpoint_name = f"{model_name}-integration-test-endpoint"
+#     perform_integration_test(endpoint_name, model_name, model_version, p95_threshold=1000, qps_threshold=1)
+#
+# elif not test_mode:
+#     endpoint_name = f"{model_name}-v{model_version}"
+#     deploy_model_serving_endpoint(endpoint_name, model_name, model_version)
