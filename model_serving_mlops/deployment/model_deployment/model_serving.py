@@ -99,7 +99,7 @@ def check_if_endpoint_is_ready(api_client: ApiClient, endpoint_name: str):
 
 
 def wait_for_endpoint_to_become_ready(
-    api_client: ApiClient, endpoint_name: str, timeout: int = 360, step: int = 10
+    api_client: ApiClient, endpoint_name: str, timeout: int = 360, step: int = 25
 ) -> bool:
     waited = 0
     while not check_if_endpoint_is_ready(api_client, endpoint_name):
