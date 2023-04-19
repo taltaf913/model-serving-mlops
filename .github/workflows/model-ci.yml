@@ -6,7 +6,7 @@ on:
       - 'model_serving_mlops/terraform/**'
 
 env:
-  DATABRICKS_HOST: https://adb-4301376284584187.7.azuredatabricks.net
+  DATABRICKS_HOST: https://adb-4301376284584187.7.azuredatabricks.net/
   DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
   NODE_TYPE_ID: Standard_D3_v2
 
