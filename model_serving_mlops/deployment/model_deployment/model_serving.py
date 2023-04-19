@@ -144,7 +144,6 @@ def test_endpoint(
         if preds:
             if len(preds) != 10:
                 raise Exception("Wrong number of predictions!")
-        time.sleep(1)
     p95 = np.percentile(durations, 95)
     qps = len(durations) / (sum(durations) / 1000)
     print(f"Observed latency (P90): {p95}. Observed QPS: {qps}.")
