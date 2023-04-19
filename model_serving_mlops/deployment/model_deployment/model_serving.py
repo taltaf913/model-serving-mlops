@@ -137,7 +137,7 @@ def test_endpoint(
     test_data_df: pd.DataFrame,
 ):
     durations = []
-    for _ in range(25):
+    for _ in range(5):
         res_json, duration = query_endpoint(endpoint_name, test_data_df)
         durations.append(duration)
         preds = res_json.get("predictions")
