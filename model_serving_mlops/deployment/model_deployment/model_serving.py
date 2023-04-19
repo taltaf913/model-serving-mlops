@@ -112,7 +112,7 @@ def wait_for_endpoint_to_become_ready(
 
 def query_endpoint(endpoint_name: str, df: pd.DataFrame) -> tuple[Any, int]:
     http_path = pathlib.Path(os.environ.get("DATABRICKS_HOST")) / "serving-endpoints" / endpoint_name / "invocations"
-    http_url = str(http_path).replace("http:/", "http://")
+    http_url = str(http_path).replace("https:/", "https://")
     headers = {
         "Authorization": f'Bearer {os.environ.get("DATABRICKS_TOKEN")}',
         "Content-Type": "application/json",
