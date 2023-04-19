@@ -13,7 +13,6 @@ from databricks_cli.configure.config import _get_api_client
 from databricks_cli.configure.provider import EnvironmentVariableConfigProvider
 from databricks_cli.sdk import ApiClient
 from mlflow.client import MlflowClient
-from model_serving_mlops.training.steps.transform import transformer_fn
 import numpy as np
 import pandas as pd
 import requests
