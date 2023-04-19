@@ -90,6 +90,8 @@ jobs:
       #       }'
 
       - name: Model serving integration test
+        env:
+          MLFLOW_TRACKING_URI: databricks
         run: |
             echo "Running model serving test"
             python ./model_serving_mlops/deployment/model_deployment/model_serving.py --config model_serving_mlops/deployment/model_deployment_config.yml --env staging --mode integration_test
