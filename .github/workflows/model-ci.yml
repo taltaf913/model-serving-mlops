@@ -49,6 +49,7 @@ jobs:
             python -m pip install --upgrade pip
             pip install -r test-requirements.txt            
             pip install databricks-cli
+            pip install -e .
 
       # - name: Integration Test - Databricks Multi-task Workflow
       #   run: |
