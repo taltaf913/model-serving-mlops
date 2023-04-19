@@ -6,6 +6,9 @@ import pathlib
 import time
 from typing import Any
 
+import click as click
+import yaml
+from pyspark.sql import SparkSession
 from databricks_cli.configure.config import _get_api_client
 from databricks_cli.configure.provider import EnvironmentVariableConfigProvider
 from databricks_cli.sdk import ApiClient
@@ -16,16 +19,24 @@ import pandas as pd
 import requests
 from requests.exceptions import HTTPError
 
+from model_serving_mlops.utils import get_model_name, get_deployed_model_stage_for_env
+
+PRODUCTION_DEPLOYMENT = "production_deployment"
+
+INTEGRATION_TEST = "integration_test"
+
 logger = logging.getLogger(__name__)
 mlflow_client = MlflowClient()
 
 
+def create_spark_session():
+    return SparkSession.builder.master("local[1]").getOrCreate()
+
+
 def prepare_scoring_data() -> pd.DataFrame:
-    input_path = pathlib.Path(".") / "model_serving_mlops" / "tests" / "training" / "test_sample.parquet"
+    input_path = pathlib.Path.cwd() / "model_serving_mlops" / "training" / "data" / "sample.parquet"
     input_pdf = pd.read_parquet(str(input_path.absolute()))
-    transformer = transformer_fn()
-    preprocessed_pdf = transformer.fit(input_pdf)
-    return preprocessed_pdf.drop(columns=["fare_amount"])
+    return input_pdf.drop(columns=["fare_amount"])
 
 
 def get_model_version_for_stage(model_name: str, stage: str) -> str:
@@ -72,7 +83,10 @@ def create_serving_endpoint(api_client: ApiClient, endpoint_name: str, model_nam
 
 
 def delete_endpoint(api_client: ApiClient, endpoint_name: str):
-    return api_client.perform_query("DELETE", f"/serving-endpoints/{endpoint_name}")
+    try:
+        return api_client.perform_query("DELETE", f"/serving-endpoints/{endpoint_name}")
+    except Exception as e:
+        return str(e)
 
 
 def check_if_endpoint_is_ready(api_client: ApiClient, endpoint_name: str):
@@ -103,6 +117,10 @@ def query_endpoint(endpoint_name: str, df: pd.DataFrame) -> tuple[Any, int]:
         "Authorization": f'Bearer {os.environ.get("DATABRICKS_TOKEN")}',
         "Content-Type": "application/json",
     }
+    df = df.copy()
+    for col in df.columns:
+        if "datetime" in df[col].dtype.name:
+            df[col] = df[col].astype(str)
     ds_dict = {"dataframe_split": df.to_dict(orient="split")}
     data_json = json.dumps(ds_dict, allow_nan=True)
     start_time = time.time_ns()
@@ -196,78 +214,83 @@ def deploy_model_serving_endpoint(endpoint_name: str, model_name: str, model_ver
 
 
 def perform_integration_test(
-    endpoint_name: str, model_name: str, model_version: int, p95_threshold: int, qps_threshold: int
+    endpoint_name: str, model_name: str, stage: str, latency_p95_threshold: int, qps_threshold: int
 ):
     logger.info("Getting api_client...")
     api_client = get_api_clent()
-    test_data_df = prepare_scoring_data[:10]
+    model_version = get_model_version_for_stage(model_name, stage)
+    test_data_df = prepare_scoring_data()[:10]
+    delete_endpoint(api_client, endpoint_name)
     create_serving_endpoint(api_client, endpoint_name, model_name, model_version)
     time.sleep(100)
     if wait_for_endpoint_to_become_ready(api_client, endpoint_name):
-        test_endpoint(endpoint_name, p95_threshold, qps_threshold, test_data_df)
+        test_endpoint(endpoint_name, latency_p95_threshold, qps_threshold, test_data_df)
         delete_endpoint(api_client, endpoint_name)
     else:
         print("Endpoint failed to become ready within timeout. ")
         raise Exception("Endpoint failed to become ready within timeout. ")
 
 
-def _setup_parser():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--test_mode",
-        type=bool,
-        action="store_true",
-        help="""Whether the current notebook is running in "test" mode. Defaults to False. 
-                When test_mode is True, an integration test for the model serving endpoint is run.
-                If false, deploy model serving endpoint.
-        """,
-        )
-    parser.add_argument(
-        "--model_name",
-        type=str,
-        default=None,
-        help="The name of the model in Databricks Model Registry to be served."
-        )
-    parser.add_argument(
-        "--model_version",
-        type=int,
-        default=None,
-        help="""The version of the model in Databricks Model Registry to be served. 
-                If None, most recent model version will be used."""
-        )    
-    parser.add_argument(
-        "--endpoint_name",
-        type=int,
-        default=None,
-        help="""Name of the Databricks Model Serving Endpoint."""
-        )     
-    
+def perform_prod_deployment(
+    endpoint_name: str, model_name: str, stage: str, latency_p95_threshold: int, qps_threshold: int
+):
+    api_client = get_api_clent()
+    df = prepare_scoring_data()[:10]
+    existing_endpt_conf = get_model_endpoint_config(api_client, endpoint_name)
+    model_version = get_model_version_for_stage(model_name, stage)
+    if existing_endpt_conf:
+        deploy_new_version_to_existing_endpoint(api_client, endpoint_name, model_name, model_version)
+    else:
+        create_serving_endpoint(api_client, endpoint_name, model_name, model_version)
+    time.sleep(100)
+    test_endpoint(endpoint_name, latency_p95_threshold, qps_threshold, df)
 
-def main(args):
-    if args.test_mode:        
-        if not args.model_version:
-            model_version = get_recent_model_version(name=args.model_name)
-        else:
-            model_version = args.model_version
-        if not args.endpoint_name:
-            endpoint_name = f"{args.model_name}-integration-test-endpoint"
-        perform_integration_test(endpoint_name, 
-                                 args.model_name, 
-                                 model_version, 
-                                 p95_threshold=1000, 
-                                 qps_threshold=1)
 
-    elif not args.test_mode:
-        if not args.model_version:
-            model_version = get_recent_model_version() 
-        else:
-            model_version = args.model_version
-        if not args.endpoint_name:
-            endpoint_name = f"{args.model_name}-v{model_version}"
-        deploy_model_serving_endpoint(endpoint_name, args.model_name, model_version)
+@click.command()
+@click.option(
+    "--mode",
+    type=click.Choice([INTEGRATION_TEST, PRODUCTION_DEPLOYMENT]),
+    default=INTEGRATION_TEST,
+    help="""Run mode. Valid values are 'integration_test' for the test deployment in Staging environment 
+        and  'production_deployment' for model deployment in Production environment""",
+)
+@click.option(
+    "--env",
+    type=click.STRING,
+    default="staging",
+    help="""Target environment. Valid values are "dev", "staging", "prod".""",
+)
+@click.option(
+    "--config",
+    required=True,
+    type=click.STRING,
+    help="""Path to the configuration file.""",
+)
+def main(mode: str, env: str, config: str):
+    model_name = get_model_name(env)
+    endpoint_name = f"{model_name}-{env}"
+    strage = get_deployed_model_stage_for_env(env)
+    with open(config, "r") as file:
+        config_dict = yaml.load(file, Loader=yaml.FullLoader)
+    if mode == INTEGRATION_TEST:
+        perform_integration_test(
+            endpoint_name,
+            model_name,
+            strage,
+            config_dict.get("latency_p95_threshold", 1000),
+            config_dict.get("qps_threshold", 1),
+        )
+    elif mode == PRODUCTION_DEPLOYMENT:
+        perform_prod_deployment(
+            endpoint_name,
+            model_name,
+            strage,
+            config_dict.get("latency_p95_threshold", 1000),
+            config_dict.get("qps_threshold", 1),
+        )
+    else:
+        raise Exception(f"Wron value for mode parameter: {mode}")
 
 
 if __name__ == "__main__":
-    parser = _setup_parser()
-    args = parser.parse_args()
-    main(args)    
+    main()
