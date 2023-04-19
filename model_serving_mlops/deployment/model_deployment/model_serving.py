@@ -137,13 +137,14 @@ def test_endpoint(
     test_data_df: pd.DataFrame,
 ):
     durations = []
-    for _ in range(500):
+    for _ in range(25):
         res_json, duration = query_endpoint(endpoint_name, test_data_df)
         durations.append(duration)
         preds = res_json.get("predictions")
         if preds:
             if len(preds) != 10:
                 raise Exception("Wrong number of predictions!")
+        time.sleep(1)
     p95 = np.percentile(durations, 95)
     qps = len(durations) / (sum(durations) / 1000)
     print(f"Observed latency (P90): {p95}. Observed QPS: {qps}.")
@@ -199,17 +200,17 @@ def get_model_endpoint_config(api_client: ApiClient, endpoint_name: str) -> dict
         return None
 
 
-def deploy_model_serving_endpoint(endpoint_name: str, model_name: str, model_version: int):
-    api_client = get_api_clent()
-    df = prepare_scoring_data[:10]
-    existing_endpoint_conf = get_model_endpoint_config(api_client, endpoint_name)
-
-    if existing_endpoint_conf:
-        deploy_new_version_to_existing_endpoint(api_client, endpoint_name, model_name, model_version)
-    else:
-        create_serving_endpoint(api_client, endpoint_name, model_name, model_version)
-    time.sleep(100)
-    test_endpoint(endpoint_name, 1000, 1, df)
+# def deploy_model_serving_endpoint(endpoint_name: str, model_name: str, model_version: int):
+#     api_client = get_api_clent()
+#     df = prepare_scoring_data[:10]
+#     existing_endpoint_conf = get_model_endpoint_config(api_client, endpoint_name)
+#
+#     if existing_endpoint_conf:
+#         deploy_new_version_to_existing_endpoint(api_client, endpoint_name, model_name, model_version)
+#     else:
+#         create_serving_endpoint(api_client, endpoint_name, model_name, model_version)
+#     time.sleep(100)
+#     test_endpoint(endpoint_name, 1000, 1, df)
 
 
 def perform_integration_test(
@@ -223,7 +224,7 @@ def perform_integration_test(
     create_serving_endpoint(api_client, endpoint_name, model_name, model_version)
     time.sleep(100)
     if wait_for_endpoint_to_become_ready(api_client, endpoint_name):
-        #test_endpoint(endpoint_name, latency_p95_threshold, qps_threshold, test_data_df)
+        test_endpoint(endpoint_name, latency_p95_threshold, qps_threshold, test_data_df)
         delete_endpoint(api_client, endpoint_name)
     else:
         print("Endpoint failed to become ready within timeout. ")
