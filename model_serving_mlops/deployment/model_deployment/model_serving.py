@@ -1,3 +1,5 @@
+
+
 import argparse
 import json
 import logging
@@ -19,6 +21,7 @@ import requests
 from requests.exceptions import HTTPError
 
 from model_serving_mlops.utils import get_model_name, get_deployed_model_stage_for_env
+from model_serving_mlops.deployment.model_deployment.endpoint_performance import test_endpoint_locust
 
 PRODUCTION_DEPLOYMENT = "production_deployment"
 
@@ -225,7 +228,7 @@ def perform_integration_test(
     create_serving_endpoint(api_client, endpoint_name, model_name, model_version)
     time.sleep(100)
     if wait_for_endpoint_to_become_ready(api_client, endpoint_name):
-        test_endpoint(endpoint_name, latency_p95_threshold, qps_threshold, test_data_df)
+        test_endpoint_locust(endpoint_name, latency_p95_threshold, qps_threshold, test_data_df)
         delete_endpoint(api_client, endpoint_name)
     else:
         print("Endpoint failed to become ready within timeout. ")
@@ -244,7 +247,7 @@ def perform_prod_deployment(
     else:
         create_serving_endpoint(api_client, endpoint_name, model_name, model_version)
     time.sleep(100)
-    test_endpoint(endpoint_name, latency_p95_threshold, qps_threshold, df)
+    test_endpoint_locust(endpoint_name, latency_p95_threshold, qps_threshold, df)
 
 
 @click.command()
