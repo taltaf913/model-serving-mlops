@@ -1,0 +1,98 @@
+name: Integration Test for ML Model
+on:
+  workflow_dispatch:
+  pull_request:
+    paths-ignore:
+      - 'model_serving_mlops/terraform/**'
+
+env:
+  DATABRICKS_HOST: https://adb-4301376284584187.7.azuredatabricks.net
+  DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_PROD_TOKEN }}
+  NODE_TYPE_ID: Standard_D3_v2
+
+
+jobs:
+  unit_tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.10.10
+
+      - name: Install dependencies
+        run: |
+            python -m pip install --upgrade pip
+            pip install -r test-requirements.txt
+
+      - name: Run unit tests
+        run: pytest
+
+  integration_test:
+    needs: unit_tests
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.10.10
+
+      - name: Install dependencies
+        run: |
+            python -m pip install --upgrade pip
+            pip install -r test-requirements.txt            
+            pip install databricks-cli
+            pip install -e .
+
+      # - name: Integration Test - Databricks Multi-task Workflow
+      #   run: |
+      #     databricks jobs configure --version=2.1
+      #     databricks runs submit --wait --json \
+      #       '{
+      #         "run_name": "integration-test",
+      #         "tasks": [
+      #           {
+      #             "task_key": "Train",
+      #             "notebook_task": {
+      #               "notebook_path": "model_serving_mlops/training/notebooks/Train",
+      #               "base_parameters": {
+      #                   "env": "staging",
+      #                   "test_mode": "True"
+      #                 }
+      #               },
+      #             "new_cluster": {
+      #               "spark_version": "12.2.x-cpu-ml-scala2.12",
+      #               "node_type_id": "${{ env.NODE_TYPE_ID }}",
+      #               "num_workers": 0,
+      #               "spark_conf": {
+      #                 "spark.databricks.cluster.profile": "singleNode",
+      #                 "spark.master": "local[*, 4]"
+      #                 },
+      #                 "custom_tags": {
+      #                   "ResourceClass": "SingleNode",
+      #                   "clusterSource": "mlops-stack/0.0"
+      #                 }
+      #               }
+      #             }
+      #           ],
+      #         "git_source": {
+      #           "git_url": "https://github.com/${{ github.repository }}.git",
+      #           "git_commit": "${{ github.event.pull_request.head.sha || github.sha }}",
+      #           "git_provider": "gitHub"
+      #         }
+      #       }'
+
+      - name: Model serving integration test
+        env:
+          MLFLOW_TRACKING_URI: databricks
+        run: |
+            echo "Running model serving test"
+            python ./model_serving_mlops/deployment/model_deployment/model_serving.py --config model_serving_mlops/deployment/model_deployment_config.yml --env prod --mode production_deployment
