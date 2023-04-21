@@ -1,4 +1,4 @@
-name: Integration Test for ML Model
+name: Production Deployment for the ML Model
 on:
   workflow_dispatch:
   pull_request:
@@ -6,7 +6,7 @@ on:
       - 'model_serving_mlops/terraform/**'
 
 env:
-  DATABRICKS_HOST: https://adb-4301376284584187.7.azuredatabricks.net
+  DATABRICKS_HOST: https://adb-3011150083119087.7.azuredatabricks.net/
   DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_PROD_TOKEN }}
   NODE_TYPE_ID: Standard_D3_v2
 
@@ -32,7 +32,7 @@ jobs:
       - name: Run unit tests
         run: pytest
 
-  integration_test:
+  production_deployment:
     needs: unit_tests
     runs-on: ubuntu-20.04
 
@@ -90,9 +90,9 @@ jobs:
       #         }
       #       }'
 
-      - name: Model serving integration test
+      - name: Production deployment of the ML Model
         env:
           MLFLOW_TRACKING_URI: databricks
         run: |
-            echo "Running model serving test"
+            echo "Production deployment of the ML Model"
             python ./model_serving_mlops/deployment/model_deployment/model_serving.py --config model_serving_mlops/deployment/model_deployment_config.yml --env prod --mode production_deployment
