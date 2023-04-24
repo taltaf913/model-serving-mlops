@@ -1,3 +1,6 @@
+import gevent.monkey
+gevent.monkey.patch_all()
+
 import argparse
 import json
 import logging
@@ -19,6 +22,7 @@ import requests
 from requests.exceptions import HTTPError
 
 from model_serving_mlops.utils import get_model_name, get_deployed_model_stage_for_env
+from model_serving_mlops.deployment.model_deployment.endpoint_performance import test_endpoint_locust
 
 PRODUCTION_DEPLOYMENT = "production_deployment"
 
@@ -205,7 +209,7 @@ def get_model_endpoint_config(api_client: ApiClient, endpoint_name: str) -> dict
 #     api_client = get_api_clent()
 #     df = prepare_scoring_data[:10]
 #     existing_endpoint_conf = get_model_endpoint_config(api_client, endpoint_name)
-#
+
 #     if existing_endpoint_conf:
 #         deploy_new_version_to_existing_endpoint(api_client, endpoint_name, model_name, model_version)
 #     else:
@@ -225,7 +229,7 @@ def perform_integration_test(
     create_serving_endpoint(api_client, endpoint_name, model_name, model_version)
     time.sleep(100)
     if wait_for_endpoint_to_become_ready(api_client, endpoint_name):
-        test_endpoint(endpoint_name, latency_p95_threshold, qps_threshold, test_data_df)
+        test_endpoint_locust(endpoint_name, latency_p95_threshold, qps_threshold, test_data_df)
         delete_endpoint(api_client, endpoint_name)
     else:
         print("Endpoint failed to become ready within timeout. ")
@@ -245,7 +249,8 @@ def perform_prod_deployment(
         create_serving_endpoint(api_client, endpoint_name, model_name, model_version)
     time.sleep(100)
     if wait_for_endpoint_to_become_ready(api_client, endpoint_name):
-        test_endpoint(endpoint_name, latency_p95_threshold, qps_threshold, df)
+
+        test_endpoint_locust(endpoint_name, latency_p95_threshold, qps_threshold, df)
     else:
         raise Exception(f"Production endpoint {endpoint_name} is not ready!")
 
@@ -293,7 +298,7 @@ def main(mode: str, env: str, config: str):
             config_dict.get("qps_threshold", 1),
         )
     else:
-        raise Exception(f"Wron value for mode parameter: {mode}")
+        raise Exception(f"Wrong value for mode parameter: {mode}")
 
 
 if __name__ == "__main__":
