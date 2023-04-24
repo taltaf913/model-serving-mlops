@@ -1,10 +1,13 @@
-from locust.stats import stats_printer, stats_history, get_stats_summary
-from locust.env import Environment
 from locust import HttpUser, task
-import pandas as pd
+from locust.env import Environment
+from locust.stats import stats_history, stats_printer
+
 import json
+import pandas as pd
+
 import os
 import gevent.monkey
+
 gevent.monkey.patch_all()
 
 
@@ -12,6 +15,7 @@ class DataContext(object):
     """
     Singleton vs Global variables
     """
+
     def __new__(cls):
         if not hasattr(cls, "instance"):
             cls.instance = super(DataContext, cls).__new__(cls)
@@ -19,7 +23,6 @@ class DataContext(object):
 
 
 class TestUser(HttpUser):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -55,12 +58,12 @@ def test_endpoint_locust(
     qps_threshold: int,
     test_data_df: pd.DataFrame,
     active_users: int = 1,
-    duration: int = 20
+    duration: int = 20,
 ):
 
     DataContext().sample_data = test_data_df
 
-    db_host = os.environ.get('DATABRICKS_HOST')
+    db_host = os.environ.get("DATABRICKS_HOST")
     if db_host.endswith("/"):
         db_host = db_host[:-1]
 
