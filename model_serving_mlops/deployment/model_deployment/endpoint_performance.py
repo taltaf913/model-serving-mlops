@@ -4,13 +4,11 @@ import os
 import gevent.monkey
 
 gevent.monkey.patch_all()
-
 from locust import HttpUser, task
 from locust.env import Environment
 from locust.stats import stats_history, stats_printer
 
 import pandas as pd
-
 
 class DataContext(object):
     """DataContext."""
