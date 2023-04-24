@@ -1,6 +1,5 @@
 """This module contains utils shared between different notebooks."""
 import json
-import os
 from pathlib import Path
 
 

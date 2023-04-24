@@ -6,24 +6,20 @@ import time
 from typing import Any
 
 import click as click
-import yaml
-from pyspark.sql import SparkSession
 from databricks_cli.configure.config import _get_api_client
 from databricks_cli.configure.provider import EnvironmentVariableConfigProvider
 from databricks_cli.sdk import ApiClient
-from mlflow.client import MlflowClient
-import numpy as np
-import pandas as pd
-import requests
-from requests.exceptions import HTTPError
-
 import gevent.monkey
-
 gevent.monkey.patch_all()
-
+from mlflow.client import MlflowClient
 from model_serving_mlops.deployment.model_deployment.endpoint_performance import test_endpoint_locust
 from model_serving_mlops.utils import get_deployed_model_stage_for_env, get_model_name
-
+import numpy as np
+import pandas as pd
+from pyspark.sql import SparkSession
+import requests
+from requests.exceptions import HTTPError
+import yaml
 
 PRODUCTION_DEPLOYMENT = "production_deployment"
 
