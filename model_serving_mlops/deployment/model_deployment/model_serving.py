@@ -22,7 +22,7 @@ import gevent.monkey
 gevent.monkey.patch_all()
 
 from model_serving_mlops.deployment.model_deployment.endpoint_performance import test_endpoint_locust
-from model_serving_mlops.utils import get_model_name, get_deployed_model_stage_for_env
+from model_serving_mlops.utils import  get_deployed_model_stage_for_env, get_model_name
 
 
 PRODUCTION_DEPLOYMENT = "production_deployment"
@@ -57,7 +57,7 @@ def get_api_clent() -> ApiClient:
     logger.info("Getting config using EnvironmentVariableConfigProvider...")
     config = EnvironmentVariableConfigProvider().get_config()
     logger.info(f"config: {config}")
-    logger.info(f"_get_api_client")
+    logger.info("_get_api_client")
     api_client = _get_api_client(config, command_name="")
     return api_client
 
