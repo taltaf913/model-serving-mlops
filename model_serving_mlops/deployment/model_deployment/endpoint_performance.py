@@ -13,10 +13,8 @@ import pandas as pd
 
 
 class DataContext(object):
-    """ DataContext
-    Singleton
-    """
-
+    """DataContext"""
+    
     def __new__(cls):
         if not hasattr(cls, "instance"):
             cls.instance = super(DataContext, cls).__new__(cls)
@@ -24,11 +22,10 @@ class DataContext(object):
 
 
 class TestUser(HttpUser):
-    """ TestUser
-    """
+    """TestUser"""
+
     def __init__(self, *args, **kwargs):
-        """ Initialize
-        """
+        """Initialize"""
         super().__init__(*args, **kwargs)
 
         self.endpoint_name = None
