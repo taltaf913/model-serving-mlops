@@ -10,6 +10,7 @@ from databricks_cli.configure.config import _get_api_client
 from databricks_cli.configure.provider import EnvironmentVariableConfigProvider
 from databricks_cli.sdk import ApiClient
 import gevent.monkey
+
 gevent.monkey.patch_all()
 from mlflow.client import MlflowClient
 from model_serving_mlops.deployment.model_deployment.endpoint_performance import test_endpoint_locust

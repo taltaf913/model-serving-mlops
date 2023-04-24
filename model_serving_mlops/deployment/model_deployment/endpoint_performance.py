@@ -2,6 +2,7 @@ import json
 import os
 
 import gevent.monkey
+
 gevent.monkey.patch_all()
 from locust import HttpUser, task
 from locust.env import Environment
