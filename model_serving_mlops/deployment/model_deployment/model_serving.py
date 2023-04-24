@@ -298,7 +298,7 @@ def main(mode: str, env: str, config: str):
             config_dict.get("qps_threshold", 1),
         )
     else:
-        raise Exception(f"Wron value for mode parameter: {mode}")
+        raise Exception(f"Wrong value for mode parameter: {mode}")
 
 
 if __name__ == "__main__":

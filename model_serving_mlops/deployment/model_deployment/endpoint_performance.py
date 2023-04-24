@@ -59,7 +59,11 @@ def test_endpoint_locust(
 
     DataContext().sample_data = test_data_df
 
-    host = f"{os.environ.get('DATABRICKS_HOST')}/serving-endpoints/{endpoint_name}"
+    db_host = os.environ.get('DATABRICKS_HOST')
+    if db_host.endswith("/"):
+        db_host = db_host[:-1]
+
+    host = f"{db_host}/serving-endpoints/{endpoint_name}"
 
     env = Environment(user_classes=[TestUser], host=host)
 
