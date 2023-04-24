@@ -1,4 +1,5 @@
-
+import gevent.monkey
+gevent.monkey.patch_all()
 
 import argparse
 import json
@@ -208,7 +209,7 @@ def get_model_endpoint_config(api_client: ApiClient, endpoint_name: str) -> dict
 #     api_client = get_api_clent()
 #     df = prepare_scoring_data[:10]
 #     existing_endpoint_conf = get_model_endpoint_config(api_client, endpoint_name)
-#
+
 #     if existing_endpoint_conf:
 #         deploy_new_version_to_existing_endpoint(api_client, endpoint_name, model_name, model_version)
 #     else:
@@ -248,6 +249,7 @@ def perform_prod_deployment(
         create_serving_endpoint(api_client, endpoint_name, model_name, model_version)
     time.sleep(100)
     if wait_for_endpoint_to_become_ready(api_client, endpoint_name):
+
         test_endpoint_locust(endpoint_name, latency_p95_threshold, qps_threshold, df)
     else:
         raise Exception(f"Production endpoint {endpoint_name} is not ready!")
