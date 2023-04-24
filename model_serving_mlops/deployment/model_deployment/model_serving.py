@@ -250,7 +250,6 @@ def perform_prod_deployment(
         create_serving_endpoint(api_client, endpoint_name, model_name, model_version)
     time.sleep(100)
     if wait_for_endpoint_to_become_ready(api_client, endpoint_name):
-
         test_endpoint_locust(endpoint_name, latency_p95_threshold, qps_threshold, df)
     else:
         raise Exception(f"Production endpoint {endpoint_name} is not ready!")

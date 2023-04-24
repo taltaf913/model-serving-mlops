@@ -13,8 +13,8 @@ import pandas as pd
 
 
 class DataContext(object):
-    """DataContext"""
-    
+    """DataContext."""
+
     def __new__(cls):
         if not hasattr(cls, "instance"):
             cls.instance = super(DataContext, cls).__new__(cls)
@@ -22,10 +22,10 @@ class DataContext(object):
 
 
 class TestUser(HttpUser):
-    """TestUser"""
+    """TestUser."""
 
     def __init__(self, *args, **kwargs):
-        """Initialize"""
+        """Initialize."""
         super().__init__(*args, **kwargs)
 
         self.endpoint_name = None
@@ -62,7 +62,6 @@ def test_endpoint_locust(
     active_users: int = 1,
     duration: int = 20,
 ):
-
     DataContext().sample_data = test_data_df
 
     db_host = os.environ.get("DATABRICKS_HOST")
