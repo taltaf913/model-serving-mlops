@@ -1,5 +1,9 @@
-import os
 import json
+import os
+
+import gevent.monkey
+
+gevent.monkey.patch_all()
 
 from locust import HttpUser, task
 from locust.env import Environment
@@ -7,14 +11,10 @@ from locust.stats import stats_history, stats_printer
 
 import pandas as pd
 
-import gevent.monkey
-
-gevent.monkey.patch_all()
-
 
 class DataContext(object):
-    """
-    Singleton vs Global variables
+    """ DataContext
+    Singleton
     """
 
     def __new__(cls):
@@ -24,7 +24,11 @@ class DataContext(object):
 
 
 class TestUser(HttpUser):
+    """ TestUser
+    """
     def __init__(self, *args, **kwargs):
+        """ Initialize
+        """
         super().__init__(*args, **kwargs)
 
         self.endpoint_name = None
