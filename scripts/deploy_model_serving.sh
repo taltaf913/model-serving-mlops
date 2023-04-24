@@ -12,4 +12,4 @@ if [ "$FAILURE" = true ]; then
   exit 1
 fi
 echo "Model Serving deployment passed"
-exit 0 
+exit 0

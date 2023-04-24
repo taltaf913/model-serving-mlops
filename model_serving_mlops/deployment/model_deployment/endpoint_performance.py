@@ -10,6 +10,7 @@ from locust.stats import stats_history, stats_printer
 
 import pandas as pd
 
+
 class DataContext(object):
     """DataContext."""
 

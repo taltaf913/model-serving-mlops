@@ -22,7 +22,7 @@ import gevent.monkey
 gevent.monkey.patch_all()
 
 from model_serving_mlops.deployment.model_deployment.endpoint_performance import test_endpoint_locust
-from model_serving_mlops.utils import  get_deployed_model_stage_for_env, get_model_name
+from model_serving_mlops.utils import get_deployed_model_stage_for_env, get_model_name
 
 
 PRODUCTION_DEPLOYMENT = "production_deployment"
@@ -260,7 +260,7 @@ def perform_prod_deployment(
     "--mode",
     type=click.Choice([INTEGRATION_TEST, PRODUCTION_DEPLOYMENT]),
     default=INTEGRATION_TEST,
-    help="""Run mode. Valid values are 'integration_test' for the test deployment in Staging environment 
+    help="""Run mode. Valid values are 'integration_test' for the test deployment in Staging environment
         and  'production_deployment' for model deployment in Production environment""",
 )
 @click.option(
