@@ -1,25 +1,25 @@
+from locust.stats import stats_printer, stats_history, get_stats_summary
+from locust.env import Environment
+from locust import HttpUser, task
+import pandas as pd
+import json
+import os
 import gevent.monkey
 gevent.monkey.patch_all()
 
-import os
-import json
-import pandas as pd
-from locust import HttpUser, task
-from locust.env import Environment
-from locust.stats import stats_printer, stats_history, get_stats_summary
-
 
 class DataContext(object):
-  """
-  Singleton vs Global variables
-  """
-  def __new__(cls):
-      if not hasattr(cls, "instance"):
-         cls.instance = super(DataContext, cls).__new__(cls)
-      return cls.instance
+    """
+    Singleton vs Global variables
+    """
+    def __new__(cls):
+        if not hasattr(cls, "instance"):
+            cls.instance = super(DataContext, cls).__new__(cls)
+        return cls.instance
+
 
 class TestUser(HttpUser):
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -28,34 +28,35 @@ class TestUser(HttpUser):
         self.headers = None
 
         self.json_payload = None
-    
+
     def on_start(self):
         self.headers = {
-                    "Authorization": f'Bearer {os.environ.get("DATABRICKS_TOKEN")}',
-                    "Content-Type": "application/json",
-                }
-        
+            "Authorization": f'Bearer {os.environ.get("DATABRICKS_TOKEN")}',
+            "Content-Type": "application/json",
+        }
+
         df = DataContext().sample_data.copy()
         for col in df.columns:
             if "datetime" in df[col].dtype.name:
                 df[col] = df[col].astype(str)
         ds_dict = {"dataframe_split": df.to_dict(orient="split")}
-        self.json_payload  = json.dumps(ds_dict, allow_nan=True)
+        self.json_payload = json.dumps(ds_dict, allow_nan=True)
 
         return super().on_start()
-    
+
     @task
     def invoke_model(self):
         self.client.post(self.api, headers=self.headers, data=self.json_payload)
 
+
 def test_endpoint_locust(
-        endpoint_name: str,
-        latency_threshold: int,
-        qps_threshold: int,
-        test_data_df: pd.DataFrame,
-        active_users: int = 1,
-        duration: int = 20
-    ):
+    endpoint_name: str,
+    latency_threshold: int,
+    qps_threshold: int,
+    test_data_df: pd.DataFrame,
+    active_users: int = 1,
+    duration: int = 20
+):
 
     DataContext().sample_data = test_data_df
 
@@ -71,7 +72,7 @@ def test_endpoint_locust(
 
     env.events.init.fire(environment=env, runner=runner)
     gevent.spawn(stats_printer(env.stats))
-  
+
     gevent.spawn(stats_history, env.runner)
 
     # spawn rate: 0.5  = 1 user every 2 seconds
