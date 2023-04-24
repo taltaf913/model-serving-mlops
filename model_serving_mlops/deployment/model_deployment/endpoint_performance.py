@@ -1,11 +1,12 @@
+import os
+import json
+
 from locust import HttpUser, task
 from locust.env import Environment
 from locust.stats import stats_history, stats_printer
 
-import json
 import pandas as pd
 
-import os
 import gevent.monkey
 
 gevent.monkey.patch_all()

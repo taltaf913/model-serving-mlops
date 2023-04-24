@@ -1,8 +1,3 @@
-import gevent.monkey
-
-gevent.monkey.patch_all()
-
-import argparse
 import json
 import logging
 import os
@@ -22,8 +17,13 @@ import pandas as pd
 import requests
 from requests.exceptions import HTTPError
 
-from model_serving_mlops.utils import get_model_name, get_deployed_model_stage_for_env
+import gevent.monkey
+
+gevent.monkey.patch_all()
+
 from model_serving_mlops.deployment.model_deployment.endpoint_performance import test_endpoint_locust
+from model_serving_mlops.utils import get_model_name, get_deployed_model_stage_for_env
+
 
 PRODUCTION_DEPLOYMENT = "production_deployment"
 
