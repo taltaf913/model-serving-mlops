@@ -1,3 +1,7 @@
+import gevent.monkey
+
+gevent.monkey.patch_all()
+
 import json
 import logging
 import os
@@ -9,9 +13,7 @@ import click as click
 from databricks_cli.configure.config import _get_api_client
 from databricks_cli.configure.provider import EnvironmentVariableConfigProvider
 from databricks_cli.sdk import ApiClient
-import gevent.monkey
 
-gevent.monkey.patch_all()
 from mlflow.client import MlflowClient
 from model_serving_mlops.deployment.model_deployment.endpoint_performance import test_endpoint_locust
 from model_serving_mlops.utils import get_deployed_model_stage_for_env, get_model_name
