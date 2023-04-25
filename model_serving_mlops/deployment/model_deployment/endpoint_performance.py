@@ -85,7 +85,7 @@ def test_endpoint_locust(
     env.runner.greenlet.join()
     key = list(runner.stats.entries.keys())[0]
     stat_entry = runner.stats.entries[key]
-    qps = stat_entry.total_rps
+    qps = 1. / stat_entry.avg_response_time
     p95 = stat_entry.get_response_time_percentile(0.95)
 
     if stat_entry.num_failures > 0:
