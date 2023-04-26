@@ -42,7 +42,7 @@ jobs:
             pip install databricks-cli
             pip install -e .
 
-      - name: Deploy model to MLflow Registry staging stage
+      - name: Transition model to MLflow Registry staging stage
         env:
           MLFLOW_TRACKING_URI: databricks
         run: |
@@ -51,10 +51,10 @@ jobs:
           python model_serving_mlops/deployment/model_deployment/deploy.py "${{ github.event.inputs.modelUri }}" "staging"
           echo "Success!"
 
-      - name: Databricks Model Serving endpoint
+      - name: Deploy Databricks Model Serving endpoint
         env:
           MLFLOW_TRACKING_URI: databricks
         run: |
             echo "Setting up Databricks Model Serving Endpoint with staging model..."
-            python model_serving_mlops/deployment/model_deployment/model_serving.py --config model_serving_mlops/deployment/model_deployment_config.yml --env prod --mode production_deployment
+            python model_serving_mlops/deployment/model_deployment/model_serving.py --config model_serving_mlops/deployment/model_deployment_config.yml --env staging --mode production_deployment
             echo "Success!"
