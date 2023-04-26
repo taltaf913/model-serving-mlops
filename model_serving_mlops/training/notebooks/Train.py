@@ -69,7 +69,7 @@ r.clean()
 
 # COMMAND ----------
 
-r.inspect()
+# r.inspect()
 
 # COMMAND ----------
 
