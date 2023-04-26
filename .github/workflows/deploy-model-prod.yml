@@ -18,6 +18,7 @@ on:
 
 env:
   DATABRICKS_HOST: https://adb-3011150083119087.7.azuredatabricks.net
+  DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_PROD_TOKEN }}
   NODE_TYPE_ID: Standard_D3_v2
 
 jobs:
@@ -36,9 +37,6 @@ jobs:
 
       - name: Install local package
         run: pip install .
-
-      - name: Generate AAD Token
-        run: ./.github/workflows/scripts/generate-aad-token.sh ${{ secrets.prodAzureSpTenantId }} ${{ secrets.prodAzureSpApplicationId }} ${{ secrets.prodAzureSpClientSecret }}
 
       - name: Deploy model to MLflow Registry production stage
         env:
