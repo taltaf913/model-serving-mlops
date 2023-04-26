@@ -39,9 +39,9 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-
+        
       - name: Generate AAD Token
-        run: ../../.github/workflows/scripts/generate-aad-token.sh ${{ secrets.stagingAzureSpTenantId }} ${{ secrets.stagingAzureSpApplicationId }} ${{ secrets.stagingAzureSpClientSecret }}        
+        run: ./.github/workflows/scripts/generate-aad-token.sh ${{ secrets.stagingAzureSpTenantId }} ${{ secrets.stagingAzureSpApplicationId }} ${{ secrets.stagingAzureSpClientSecret }}
 
       - name: Set up Python
         uses: actions/setup-python@v2

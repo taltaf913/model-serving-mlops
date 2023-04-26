@@ -1,4 +1,4 @@
-name: Production Deployment for the ML Model
+name: Prod Deployment for the ML Model
 on:
   workflow_dispatch:
   pull_request:
