@@ -1,4 +1,4 @@
-name: Integration Test for ML Model
+name: ML Code Tests - Unit, Integration, Model Serving Tests
 on:
   workflow_dispatch:
   pull_request:
