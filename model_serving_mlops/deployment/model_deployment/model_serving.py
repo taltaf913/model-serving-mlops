@@ -277,7 +277,7 @@ def main(mode: str, env: str, config: str):
     endpoint_name = f"{model_name}-{env}"
     strage = get_deployed_model_stage_for_env(env)
     with open(config, "r") as file:
-        config_dict = yaml.safe_load(file, Loader=yaml.FullLoader)
+        config_dict = yaml.safe_load(file)
     if mode == INTEGRATION_TEST:
         perform_integration_test(
             endpoint_name,
