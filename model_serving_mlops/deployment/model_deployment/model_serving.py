@@ -25,7 +25,6 @@ from requests.exceptions import HTTPError
 import yaml
 
 PRODUCTION_DEPLOYMENT = "production_deployment"
-
 INTEGRATION_TEST = "integration_test"
 
 logger = logging.getLogger(__name__)
