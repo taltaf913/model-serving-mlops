@@ -1,60 +1,60 @@
-name: Prod Deployment for the ML Model
-on:
-  workflow_dispatch:
-  pull_request:
-    paths-ignore:
-      - 'model_serving_mlops/terraform/**'
+# name: Prod Deployment for the ML Model
+# on:
+#   workflow_dispatch:
+#   pull_request:
+#     paths-ignore:
+#       - 'model_serving_mlops/terraform/**'
 
-env:
-  DATABRICKS_HOST: https://adb-3011150083119087.7.azuredatabricks.net/
-  DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_PROD_TOKEN }}
-  NODE_TYPE_ID: Standard_D3_v2
+# env:
+#   DATABRICKS_HOST: https://adb-3011150083119087.7.azuredatabricks.net/
+#   DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_PROD_TOKEN }}
+#   NODE_TYPE_ID: Standard_D3_v2
 
 
-jobs:
-  unit_tests:
-    runs-on: ubuntu-latest
+# jobs:
+#   unit_tests:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout repo
+#         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.10.10
+#       - name: Set up Python
+#         uses: actions/setup-python@v2
+#         with:
+#           python-version: 3.10.10
 
-      - name: Install dependencies
-        run: |
-            python -m pip install --upgrade pip
-            pip install -r test-requirements.txt
+#       - name: Install dependencies
+#         run: |
+#             python -m pip install --upgrade pip
+#             pip install -r test-requirements.txt
 
-      - name: Run unit tests
-        run: pytest
+#       - name: Run unit tests
+#         run: pytest
 
-  production_deployment:
-    needs: unit_tests
-    runs-on: ubuntu-20.04
+#   production_deployment:
+#     needs: unit_tests
+#     runs-on: ubuntu-20.04
 
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout repo
+#         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.10.10
+#       - name: Set up Python
+#         uses: actions/setup-python@v2
+#         with:
+#           python-version: 3.10.10
 
-      - name: Install dependencies
-        run: |
-            python -m pip install --upgrade pip
-            pip install -r test-requirements.txt
-            pip install databricks-cli
-            pip install -e .
+#       - name: Install dependencies
+#         run: |
+#             python -m pip install --upgrade pip
+#             pip install -r test-requirements.txt
+#             pip install databricks-cli
+#             pip install -e .
 
-      - name: Production deployment of the ML Model
-        env:
-          MLFLOW_TRACKING_URI: databricks
-        run: |
-            echo "Production deployment of the ML Model"
-            python ./model_serving_mlops/deployment/model_deployment/model_serving.py --config model_serving_mlops/deployment/model_deployment_config.yml --env prod --mode production_deployment
+#       - name: Production deployment of the ML Model
+#         env:
+#           MLFLOW_TRACKING_URI: databricks
+#         run: |
+#             echo "Production deployment of the ML Model"
+#             python ./model_serving_mlops/deployment/model_deployment/model_serving.py --config model_serving_mlops/deployment/model_deployment_config.yml --env prod --mode production_deployment
