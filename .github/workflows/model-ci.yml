@@ -6,8 +6,8 @@ on:
       - 'model_serving_mlops/terraform/**'
 
 env:
-  DATABRICKS_HOST: https://adb-4301376284584187.7.azuredatabricks.net/
-  DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_STAGING_TOKEN }}
+  DATABRICKS_HOST: https://adb-4301376284584187.7.azuredatabricks.net
+  # DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_STAGING_TOKEN }}
   NODE_TYPE_ID: Standard_D3_v2
 
 
@@ -39,6 +39,9 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+
+      - name: Generate AAD Token
+        run: ../../.github/workflows/scripts/generate-aad-token.sh ${{ secrets.stagingAzureSpTenantId }} ${{ secrets.stagingAzureSpApplicationId }} ${{ secrets.stagingAzureSpClientSecret }}        
 
       - name: Set up Python
         uses: actions/setup-python@v2
