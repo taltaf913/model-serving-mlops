@@ -15,4 +15,4 @@ def estimator_fn() -> SGDRegressor:
     Returns:
         SGDRegressor: *unfitted* SKLearn SGDRegressor estimator
     """
-    return SGDRegressor(random_state=42)
+    return SGDRegressor(random_state=100)
