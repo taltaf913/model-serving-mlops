@@ -1,14 +1,14 @@
 # This GitHub workflow deploys Terraform resources (ML resource config and more)
 # defined under model_serving_mlops/terraform, when PRs are merged into the default branch
-name: Terraform Deployment for model-serving-mlops
+name: Infra Deployment - Terraform CD
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - 'main'
     paths:
       - 'model_serving_mlops/terraform/**'
-  workflow_dispatch:
 
 permissions: write-all
 
