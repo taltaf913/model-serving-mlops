@@ -52,7 +52,7 @@ jobs:
             pip install databricks-cli
             pip install -e .
 
-      # - name: Integration Test 
+      # - name: Integration Test
       #   run: |
       #     databricks jobs configure --version=2.1
       #     databricks runs submit --wait --json \

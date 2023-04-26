@@ -6,7 +6,7 @@
 # This workflow is triggered in an automated manner by the model training job (see notebooks/TriggerModelDeploy.py)
 # after model training completes, to enable tracking and enforcing manual approval of model deployments in
 # CD, if desired.
-name: Prod Model Deployment 
+name: Prod Model Deployment
 
 on:
   workflow_dispatch:
@@ -41,7 +41,7 @@ jobs:
             pip install -r test-requirements.txt
             pip install databricks-cli
             pip install -e .
-            
+
       - name: Deploy model to MLflow Registry production stage
         env:
           MLFLOW_TRACKING_URI: databricks
@@ -56,5 +56,5 @@ jobs:
           MLFLOW_TRACKING_URI: databricks
         run: |
             echo "Setting up Databricks Model Serving Endpoint with production model..."
-            python model_serving_mlops/deployment/model_deployment/model_serving.py --config model_serving_mlops/deployment/model_deployment_config.yml --env prod --mode production_deployment  
+            python model_serving_mlops/deployment/model_deployment/model_serving.py --config model_serving_mlops/deployment/model_deployment_config.yml --env prod --mode production_deployment
             echo "Success!"
