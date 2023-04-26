@@ -97,7 +97,7 @@ r.run("register")
 
 # COMMAND ----------
 
-r.inspect("train")
+# r.inspect("train")
 
 # COMMAND ----------
 
