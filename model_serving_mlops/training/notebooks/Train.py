@@ -69,7 +69,7 @@ r.clean()
 
 # COMMAND ----------
 
-# r.inspect()
+r.inspect()
 
 # COMMAND ----------
 
@@ -97,7 +97,7 @@ r.run("register")
 
 # COMMAND ----------
 
-# r.inspect("train")
+r.inspect("train")
 
 # COMMAND ----------
 
