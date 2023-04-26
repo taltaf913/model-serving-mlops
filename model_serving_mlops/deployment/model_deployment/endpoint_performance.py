@@ -1,9 +1,10 @@
-import json
-import os
-
 import gevent.monkey
 
 gevent.monkey.patch_all()
+
+import json
+import os
+
 from locust import HttpUser, task
 from locust.env import Environment
 from locust.stats import stats_history, stats_printer
@@ -85,7 +86,7 @@ def test_endpoint_locust(
     env.runner.greenlet.join()
     key = list(runner.stats.entries.keys())[0]
     stat_entry = runner.stats.entries[key]
-    qps = (1. / stat_entry.avg_response_time) * 1000. # 1 / ms * ms
+    qps = (1.0 / stat_entry.avg_response_time) * 1000.0  # 1 / ms * ms
     p95 = stat_entry.get_response_time_percentile(0.95)
 
     if stat_entry.num_failures > 0:

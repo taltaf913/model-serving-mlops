@@ -13,7 +13,6 @@ import click as click
 from databricks_cli.configure.config import _get_api_client
 from databricks_cli.configure.provider import EnvironmentVariableConfigProvider
 from databricks_cli.sdk import ApiClient
-
 from mlflow.client import MlflowClient
 from model_serving_mlops.deployment.model_deployment.endpoint_performance import test_endpoint_locust
 from model_serving_mlops.utils import get_deployed_model_stage_for_env, get_model_name
@@ -278,7 +277,7 @@ def main(mode: str, env: str, config: str):
     endpoint_name = f"{model_name}-{env}"
     strage = get_deployed_model_stage_for_env(env)
     with open(config, "r") as file:
-        config_dict = yaml.load(file, Loader=yaml.FullLoader)
+        config_dict = yaml.safe_load(file, Loader=yaml.FullLoader)
     if mode == INTEGRATION_TEST:
         perform_integration_test(
             endpoint_name,

@@ -31,6 +31,9 @@ per-file-ignores =
   */__init__.py:F401,I
   # MLflow params surrounded by '' required
   model_serving_mlops/utils.py:B907
+  # Require gevent.monkey to be imported before other imports
+  model_serving_mlops/deployment/model_deployment/endpoint_performance.py:I100
+  # Require gevent.monkey to be imported before other imports
+  model_serving_mlops/deployment/model_deployment/model_serving.py:I100
 exclude =
-  ; model_serving_mlops/*  # TODO: remove after testing
   model_serving_mlops/*/notebooks/*
