@@ -1,4 +1,5 @@
 name: Lint CI/CD workflow files
+
 on:
   pull_request:
     paths:

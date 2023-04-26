@@ -6,7 +6,7 @@
 # This workflow is triggered in an automated manner by the model training job (see notebooks/TriggerModelDeploy.py)
 # after model training completes, to enable tracking and enforcing manual approval of model deployments in
 # CD, if desired.
-name: Prod Model Deployment for model-serving-mlops
+name: Prod Model Deployment 
 
 on:
   workflow_dispatch:
@@ -32,17 +32,27 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
-
-      - name: Generate AAD Token
-        run: ./.github/workflows/scripts/generate-aad-token.sh ${{ secrets.prodAzureSpTenantId }} ${{ secrets.prodAzureSpApplicationId }} ${{ secrets.prodAzureSpClientSecret }}
+          python-version: 3.10
 
       - name: Install local package
         run: pip install .
 
-      - name: Deploy model
+      - name: Generate AAD Token
+        run: ./.github/workflows/scripts/generate-aad-token.sh ${{ secrets.prodAzureSpTenantId }} ${{ secrets.prodAzureSpApplicationId }} ${{ secrets.prodAzureSpClientSecret }}
+
+      - name: Deploy model to MLflow Registry production stage
         env:
           MLFLOW_TRACKING_URI: databricks
         run: |
+          echo "Deploy model to production stage in MLflow Registry..."
           pip install mlflow
           python model_serving_mlops/deployment/model_deployment/deploy.py "${{ github.event.inputs.modelUri }}" "prod"
+          echo "Success!"
+
+      - name: Databricks Model Serving endpoint
+        env:
+          MLFLOW_TRACKING_URI: databricks
+        run: |
+            echo "Setting up Databricks Model Serving Endpoint with production model..."
+            python model_serving_mlops/deployment/model_deployment/model_serving.py --config model_serving_mlops/deployment/model_deployment_config.yml --env prod --mode production_deployment  
+            echo "Success!"

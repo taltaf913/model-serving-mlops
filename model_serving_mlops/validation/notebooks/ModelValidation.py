@@ -166,6 +166,7 @@ evaluator_config = {}
 
 # COMMAND ----------
 
+
 # helper methods
 def get_run_link(run_info):
     return "[Run](#mlflow/experiments/{0}/runs/{1})".format(run_info.experiment_id, run_info.run_id)

@@ -1,6 +1,6 @@
 """This module contains utils shared between different notebooks."""
 import json
-import os
+from pathlib import Path
 
 
 def get_deployed_model_stage_for_env(env: str) -> str:
@@ -28,9 +28,11 @@ def get_deployed_model_stage_for_env(env: str) -> str:
 
 def _get_ml_config_value(env: str, key: str):
     # Reading ml config from terraform output file for the respective key and env(staging/prod).
-    conf_file_path = os.path.join(os.pardir, "model-serving-mlops", "terraform", "output", f"{env}.json")
+
+    conf_file_path = Path.cwd() / "model_serving_mlops" / "terraform" / "output" / f"{env}.json"
+
     try:
-        with open(conf_file_path, "r") as handle:
+        with open(str(conf_file_path), "r") as handle:
             data = json.loads(handle.read())
     except FileNotFoundError as e:
         raise RuntimeError(

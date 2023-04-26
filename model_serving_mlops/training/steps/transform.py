@@ -20,11 +20,12 @@ def calculate_features(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: processed pd.DataFrame
     """
+    df = df.copy()
     df["pickup_dow"] = df["tpep_pickup_datetime"].dt.dayofweek
     df["pickup_hour"] = df["tpep_pickup_datetime"].dt.hour
     trip_duration = df["tpep_dropoff_datetime"] - df["tpep_pickup_datetime"]
     df["trip_duration"] = trip_duration.map(lambda x: x.total_seconds() / 60)
-    df.drop(columns=["tpep_pickup_datetime", "tpep_dropoff_datetime"], inplace=True)
+    df = df.drop(columns=["tpep_pickup_datetime", "tpep_dropoff_datetime"])
     return df
 
 

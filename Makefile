@@ -9,3 +9,7 @@ install-test-reqs:
 # Linting script
 lint:
 	scripts/lint.sh
+
+# Create environment
+env:
+	sh ./scripts/create_env.sh
